@@ -1,0 +1,46 @@
+@mixin rv-v-align( $h ){
+  height: $h;
+  line-height: $h;
+}
+
+@mixin rv-square( $dimensions ){
+  width: $dimensions;
+  height: $dimensions;
+}
+
+@mixin rv-sticky( $top: false, $right: false, $bottom: false, $left: false ){
+	position: absolute;
+	@if $top != false {
+		top : $top;
+	}
+	@if $right != false {
+		right : $right;
+	}
+	@if $bottom != false {
+		bottom : $bottom;
+	}
+	@if $left != false {
+		left : $left;
+	}
+}
+
+@mixin rv-dimentions($w, $h){
+  width: $w;
+  height: $h;
+}
+
+// ---------------------------------------------------------
+// USAGE:
+// 1. @import "icons/*.png";
+// 2. @each $icon-name in icon-file-name, icon-file-name-2 {
+//      @include rv-icon-set( "icons", $icon-name );
+//    }
+@mixin rv-icon-set( $icons-slug, $icon-name ){
+	.#{$icon-name} {
+		display: inline-block;
+		width: icons-sprite-width( $icon-name );
+		height: icons-sprite-height( $icon-name );
+		@include icons-sprite( $icon-name );
+	}
+}
+

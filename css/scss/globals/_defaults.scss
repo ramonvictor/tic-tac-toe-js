@@ -1,0 +1,50 @@
+@import "compass/css3/transition";
+
+html {
+  font-size: 100%;
+  overflow-y: scroll;
+}
+body {
+  font-size: 13px;
+  line-height: 1
+}
+body, button, input, select, textarea {
+  font-family: Arial,sans-serif;
+  color: #929292;
+  font-size: $font-size-default;
+}
+::-moz-selection {
+  background: #45b2ad;
+  color: #fff;
+  text-shadow:none
+}
+::selection {
+  background: #45b2ad;
+  color: #fff;
+  text-shadow: none
+}
+a {
+  color: blue;
+  text-decoration: none;
+  @include single-transition(color, .2s, linear);
+}
+a:focus {
+  outline: thin dotted
+}
+a:hover,a:active {
+  outline: 0;
+  text-decoration: none
+}
+img{
+  vertical-align: middle; 
+}
+
+h1, h2, h3, h4, h5 {
+  line-height: 140%;
+  margin-bottom: .5em;
+}
+
+p {
+  line-height: 150%;
+  margin-bottom: .7em;
+}

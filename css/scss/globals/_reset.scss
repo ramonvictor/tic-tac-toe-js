@@ -1,0 +1,97 @@
+html,body,div,span,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,address,big,cite,code,em,img,small,strong,sub,sup,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,header,nav,article,section,dialog,figure,aside,footer {
+  margin:0;
+  padding:0;
+  border:0;
+  font-size:100%;
+  vertical-align:baseline;
+  background:transparent
+}
+ol,ul {
+  list-style:none
+}
+blockquote,q {
+  quotes:none
+}
+blockquote:before,blockquote:after,q:before,q:after {
+  content:'';
+  content:none
+}
+ins {
+  text-decoration:none
+}
+del {
+  text-decoration:line-through
+}
+table {
+  border-collapse:collapse;
+  border-spacing:0
+}
+hr {
+  display:none
+}
+a {
+  overflow:hidden
+}
+abbr[title] {
+  border-bottom:1px dotted
+}
+b,strong {
+  font-weight:bold
+}
+blockquote {
+  margin:1em 40px
+}
+pre {
+  white-space:pre;
+  white-space:pre-wrap;
+  word-wrap:break-word
+}
+small {
+  font-size:85%
+}
+img {
+  -ms-interpolation-mode:bicubic
+}
+label {
+  cursor:pointer
+}
+button,input,select,textarea {
+  font-size:100%;
+  margin:0;
+  vertical-align:baseline
+}
+textarea {
+  overflow:auto;
+  vertical-align:top
+}
+button,input {
+  line-height:normal
+}
+input[type="search"] {
+  box-sizing: content-box;
+}
+input[type="checkbox"],input[type="radio"] {
+  box-sizing: border-box;
+}
+button {
+  width:auto;
+  overflow:visible
+}
+button::-moz-focus-inner,input[type="reset"]::-moz-focus-inner,input[type="button"]::-moz-focus-inner,input[type="submit"]::-moz-focus-inner,input[type="file"]>input[type="button"]::-moz-focus-inner {
+  border:0;
+  padding:0;
+  margin:0;
+}
+.lt-ie8 button,.lt-ie8 input {
+  overflow:visible
+}
+.lt-ie8 button,.lt-ie8 input,.lt-ie8 select,.lt-ie8 textarea {
+  vertical-align: middle
+}
+
+// border-box
+*, *:before, *:after {
+  -webkit-box-sizing: border-box; 
+  -moz-box-sizing: border-box; 
+  box-sizing: border-box;
+}
