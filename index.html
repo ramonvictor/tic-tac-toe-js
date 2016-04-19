@@ -10,30 +10,36 @@
 <div class="container">
 	<sidebar class="sidebar">
 		<ul class="turn-display">
-			<li class="is-selected">Player 1 (x)</li>
-			<li>Player 2 (o)</li>
+			<li class="js-player-turn is-selected">Player 1 (x)</li>
+			<li class="js-player-turn">Player 2 (o)</li>
 		</ul>
 	</sidebar>
-	<table class="tic-tac-toe-table">
+	<table class="tic-tac-toe-table js-table">
 		<tbody>
 			<tr>
-				<td class="tic-tac-toe-table-cell"><div class="x"></div></td>
-				<td class="tic-tac-toe-table-cell"><div class="o"></div></td>
-				<td class="tic-tac-toe-table-cell"></td>
+				<td class="tic-tac-toe-table-cell js-cell" data-index="0"></td>
+				<td class="tic-tac-toe-table-cell js-cell" data-index="1"></td>
+				<td class="tic-tac-toe-table-cell js-cell" data-index="2"></td>
 			</tr>
 			<tr>
-				<td class="tic-tac-toe-table-cell"></td>
-				<td class="tic-tac-toe-table-cell"></td>
-				<td class="tic-tac-toe-table-cell"></td>
+				<td class="tic-tac-toe-table-cell js-cell" data-index="3"></td>
+				<td class="tic-tac-toe-table-cell js-cell" data-index="4"></td>
+				<td class="tic-tac-toe-table-cell js-cell" data-index="5"></td>
 			</tr>
 			<tr>
-				<td class="tic-tac-toe-table-cell"></td>
-				<td class="tic-tac-toe-table-cell"></td>
-				<td class="tic-tac-toe-table-cell"></td>
+				<td class="tic-tac-toe-table-cell js-cell" data-index="6"></td>
+				<td class="tic-tac-toe-table-cell js-cell" data-index="7"></td>
+				<td class="tic-tac-toe-table-cell js-cell" data-index="8"></td>
 			</tr>
 		</tbody>
 	</table>
 </div>
 <script src="build/index.min.js"></script>
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		var T = new TicTacToe();
+		T.init('.js-table');
+	}, false);
+</script>
 </body>
 </html>
