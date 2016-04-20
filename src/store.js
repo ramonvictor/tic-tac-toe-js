@@ -18,15 +18,17 @@ Store.prototype.getState = function(action) {
 };
 
 Store.prototype.dispatch = function(action) {
-	var previousState = this.state;
-	var event;
+	var prevState = this.state;
 
 	this.state = this.update(this.state, action);
+	this.emit(prevState, this.state);
+};
 
-	event = new CustomEvent('store:update', {
+Store.prototype.emit = function(prevState, state) {
+	var event = new CustomEvent('store:update', {
 		detail: {
-			previousState: previousState,
-			state: this.state
+			previousState: prevState,
+			state: state
 		}
 	});
 
@@ -35,29 +37,31 @@ Store.prototype.dispatch = function(action) {
 
 Store.prototype.update = function(state, action) {
 	return {
-		grid: this.updateGrid(state, action),
-		turn: this.updateTurn(state, action)
+		grid: state.grid.map(function(c, i) {
+			return (action.index === i) ? updateCell(c, action) : c;
+		}),
+		turn: toggleTurn(state.turn, action)
 	};
 };
 
-Store.prototype.updateGrid = function(state, action) {
-	var grid;
-
+function updateCell(state, action) {
 	switch (action.type) {
-		case 'UPDATE_CELL':
-			grid = state.grid.slice();
-			grid[action.index] = state.turn;
-			return grid;
+		case 'SET_X':
+			return 'x';
+		case 'SET_O':
+			return 'o';
 		default:
-			return state.grid;
+			return state;
 	}
-};
+}
 
-Store.prototype.updateTurn = function(state, action) {
+function toggleTurn(state, action) {
 	switch (action.type) {
-		case 'UPDATE_CELL':
-			return state.turn === 'x' ? 'o' : 'x';
+		case 'SET_X':
+			return 'o';
+		case 'SET_O':
+			return 'x';
 		default:
-			return state.turn;
+			return state;
 	}
-};
+}

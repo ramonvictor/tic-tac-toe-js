@@ -26,13 +26,16 @@ TicTacToe.prototype.eventListeners = function() {
 
 TicTacToe.prototype.onCellClick = function(event) {
 	var target = event.currentTarget;
+	var state;
 	if (target.classList.contains('is-filled')) {
 		return;
 	}
 
+	state = this.store.getState();
+
 	this.store.dispatch({
-		type: 'UPDATE_CELL',
-		index: target.dataset.index
+		type: state.turn === 'x' ? 'SET_X' : 'SET_O',
+		index: parseInt(target.dataset.index, 10)
 	});
 };
 
