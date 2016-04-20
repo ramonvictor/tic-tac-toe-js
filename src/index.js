@@ -42,11 +42,11 @@ TicTacToe.prototype.onCellClick = function(event) {
 TicTacToe.prototype.render = function(event) {
 	var data = event.detail;
 
-	if (data.previousState.grid !== data.state.grid) {
+	if (data.prevState.grid !== data.state.grid) {
 		this.renderGrid(data.state.grid);
 	}
 
-	if (data.previousState.turn !== data.state.turn) {
+	if (data.prevState.turn !== data.state.turn) {
 		this.renderTurn(data.state.turn);
 	}
 };
