@@ -26,6 +26,9 @@ TicTacToe.prototype.eventListeners = function() {
 
 TicTacToe.prototype.onCellClick = function(event) {
 	var target = event.currentTarget;
+	if (target.classList.contains('is-filled')) {
+		return;
+	}
 
 	this.store.dispatch({
 		type: 'UPDATE_CELL',
@@ -47,15 +50,20 @@ TicTacToe.prototype.render = function(event) {
 
 TicTacToe.prototype.renderGrid = function(grid) {
 	var self = this;
+	var selected = 'is-filled';
 
 	grid.forEach(function(cell, index) {
 		var output = '';
+		var $cell = self.$tableCell[index];
+
+		$cell.classList.remove(selected);
 
 		if (cell.length > 0) {
 			output = '<div class="' + cell + '"></div>';
+			$cell.classList.add(selected);
 		}
 
-		self.$tableCell[index].innerHTML = output;
+		$cell.innerHTML = output;
 	});
 };
 
