@@ -1,11 +1,11 @@
 // Store
 // --------------
 function Store() {
-	this.event = new Event('store:update');
-
 	this.state = {};
 	this.state.grid = ['', '', '', '', '', '', '', '', ''];
 	this.state.turn = 'x';
+	// TODO
+	this.state.turnCounter = '00:30';
 }
 
 Store.prototype.getState = function(action) {
@@ -13,12 +13,19 @@ Store.prototype.getState = function(action) {
 };
 
 Store.prototype.dispatch = function(action) {
-	this.state = this.update(this.state, action);
-	this.emitUpdate();
-};
+	var previousState = this.state;
+	var event;
 
-Store.prototype.emitUpdate = function() {
-	document.dispatchEvent(this.event);
+	this.state = this.update(this.state, action);
+
+	event = new CustomEvent('store:update', {
+		detail: {
+			previousState: previousState,
+			state: this.state
+		}
+	});
+
+	document.dispatchEvent(event);
 };
 
 Store.prototype.update = function(state, action) {
@@ -87,13 +94,24 @@ TicTacToe.prototype.onCellClick = function(event) {
 	});
 };
 
-TicTacToe.prototype.render = function() {
+TicTacToe.prototype.render = function(event) {
+	var data = event.detail;
+
+	if (data.previousState.grid !== data.state.grid) {
+		this.renderGrid(data.state.grid);
+	}
+
+	if (data.previousState.turn !== data.state.turn) {
+		this.renderTurn(data.state.turn);
+	}
+};
+
+TicTacToe.prototype.renderGrid = function(grid) {
 	var self = this;
-	var state = this.store.getState();
 	var output;
 
 	// Update grid
-	state.grid.forEach(function(cell, index) {
+	grid.forEach(function(cell, index) {
 		if (cell === '') {
 			output = '';
 		} else {
@@ -102,9 +120,10 @@ TicTacToe.prototype.render = function() {
 
 		self.$tableCell[index].innerHTML = output;
 	});
+};
 
-	// Update turn class
-	if (state.turn === 'o') {
+TicTacToe.prototype.renderTurn = function(turn) {
+	if (turn === 'o') {
 		this.$playerTurn[0].classList.remove('is-selected');
 		this.$playerTurn[1].classList.add('is-selected');
 	} else {
