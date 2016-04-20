@@ -9,7 +9,7 @@
 <body>
 <div class="container">
 	<sidebar class="sidebar">
-		<ul class="turn-display">
+		<ul class="turn-display js-players-display">
 			<li class="js-player-turn is-selected">Player 1 (x)</li>
 			<li class="js-player-turn">Player 2 (o)</li>
 		</ul>
@@ -38,7 +38,11 @@
 <script>
 	document.addEventListener('DOMContentLoaded', function() {
 		var T = new TicTacToe();
-		T.init('.js-table');
+
+		T.init({
+			gridElement: '.js-table',
+			playersElement: '.js-players-display'
+		});
 	}, false);
 </script>
 </body>

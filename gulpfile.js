@@ -26,12 +26,14 @@ var target = {
     css_output : 'css/*.css',                                // where to put minified css
     sass_folder : 'css/scss',                                // where to put minified css
     js_lint_src : [                                     // all js that should be linted
+        'src/store.js',
         'src/index.js'
     ],
     js_uglify_src : [                                   // all js files that should not be concatinated
         'src/index.js'
     ],
     js_concat_src : [                                   // all js files that should be concatinated
+        'src/store.js',
         'src/index.js'
     ],
     js_dest : 'build',                                  // where to put minified js
@@ -73,17 +75,12 @@ gulp.task('js-lint', function() {
         .pipe(jshint.reporter(stylish))                 // present the results in a beautiful way
 });
 
-// minify all js files that should not be concatinated
-gulp.task('js-uglify', function() {
-    gulp.src(target.js_uglify_src)                      // get the files
-        .pipe(uglify())                                 // uglify the files
-        .pipe(rename(function(dir,base,ext){            // give the files a min suffix
-            var trunc = base.split('.')[0];
-            return trunc + '.min' + ext;
-        }))
-        .pipe(gulp.dest(target.js_dest));                // where to put the files
+// concat files
+gulp.task('js-concat', function() {
+    gulp.src(target.js_concat_src)
+        .pipe(concat('index.min.js'))
+        .pipe(gulp.dest(target.js_dest));
 });
-
 
 /*******************************************************************************
 5. BROWSER SYNC
@@ -102,8 +99,7 @@ gulp.task('watch', function() {
     gulp.watch(target.sass_src, ['compass']).on('change', browserSync.reload);
     gulp.watch(target.css_output).on('change', browserSync.reload);
     gulp.watch(target.js_lint_src, ['js-lint']).on('change', browserSync.reload);
-    gulp.watch(target.js_uglify_src, ['js-uglify']).on('change', browserSync.reload);
+    gulp.watch(target.js_uglify_src, ['js-concat']).on('change', browserSync.reload);
 });
 
-
-gulp.task('default', ['compass', 'js-lint', 'js-uglify', 'browser-sync', 'watch']);
+gulp.task('default', ['compass', 'js-lint', 'js-concat', 'browser-sync', 'watch']);
