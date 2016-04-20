@@ -5,11 +5,11 @@ function TicTacToe() {
 }
 
 TicTacToe.prototype.init = function(config) {
-	this.$table = document.querySelector(config.gridElement);
-	this.$tableCell = this.$table.querySelectorAll('.js-cell');
+	this.$table = qs(config.gridElement);
+	this.$tableCell = qsa('.js-cell', this.$table);
 
-	this.$playersDisplay = document.querySelector(config.playersElement);
-	this.$playerTurn = this.$playersDisplay.querySelectorAll('.js-player-turn');
+	this.$players = qs(config.playersElement);
+	this.$playerTurn = qsa('.js-player-turn', this.$players);
 
 	this.eventListeners();
 };
@@ -17,7 +17,7 @@ TicTacToe.prototype.init = function(config) {
 TicTacToe.prototype.eventListeners = function() {
 	var self = this;
 
-	this.toArray(this.$tableCell).forEach(function(cell) {
+	toArray(this.$tableCell).forEach(function(cell) {
 		cell.addEventListener('click', self.onCellClick.bind(self));
 	});
 
@@ -80,6 +80,19 @@ TicTacToe.prototype.renderTurn = function(turn) {
 	}
 };
 
-TicTacToe.prototype.toArray = function(arr) {
+
+// Helpers
+// --------------
+function qs(selector, context) {
+	context = context || document;
+	return context.querySelector(selector);
+}
+
+function qsa(selector, context) {
+	context = context || document;
+	return context.querySelectorAll(selector);
+}
+
+function toArray(arr) {
 	return [].slice.call(arr);
-};
+}
