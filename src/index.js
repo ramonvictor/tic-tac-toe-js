@@ -91,33 +91,38 @@ TicTacToe.prototype.renderTurn = function(turn) {
 	}
 };
 
+
 TicTacToe.prototype.checkWinner = function() {
 	var state = this.store.getState();
 	var prevState = this.store.getPrevState();
-	this.checkRows(state.grid, prevState.turn);
-	this.checkColumns(state.grid, prevState.turn);
-	this.checkDiagonals(state.grid, prevState.turn);
+
+	var rows = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+	var columns = [0, 3, 6, 1, 4, 7, 2, 5, 8];
+	var diagonals = [0, 4, 8, 2, 4, 6];
+
+	this.checkIndexes(rows, state.grid, prevState.turn);
+	this.checkIndexes(columns, state.grid, prevState.turn);
+	this.checkIndexes(diagonals, state.grid, prevState.turn);
 };
 
-TicTacToe.prototype.checkRows = function(grid, lastTurn) {
-	var regex = new RegExp(lastTurn, 'g');
-	var rows = [grid.slice(0, 3).join(''),
-					grid.slice(3, 6).join(''),
-					grid.slice(6, 9).join('')];
 
-	rows.forEach(function(row) {
-		if (row.match(regex) && row.match(regex).length === 3) {
-			console.log(lastTurn, ' wins!');
+TicTacToe.prototype.checkIndexes = function(indexes, grid, lastTurn) {
+	var cols = { x: 0, o: 0 };
+	var index;
+
+	for (var i = 0; i < indexes.length; i++) {
+		index = indexes[i];
+		cols[grid[index]]++;
+
+		if (cols[lastTurn] === 3) {
+			console.log(lastTurn, 'wins!');
+			break;
 		}
-	});
-};
 
-// TODO
-TicTacToe.prototype.checkColumns = function(grid, lastTurn) {
-};
-
-// TODO
-TicTacToe.prototype.checkDiagonals = function(grid, lastTurn) {
+		if ((i + 1) % 3 === 0) {
+			cols = { x: 0, o: 0 };
+		}
+	}
 };
 
 // Helpers
