@@ -2,6 +2,7 @@
 // --------------
 function TicTacToe() {
 	this.store = new Store();
+	this.turnCounter = 0;
 }
 
 TicTacToe.prototype.init = function(config) {
@@ -37,6 +38,16 @@ TicTacToe.prototype.onCellClick = function(event) {
 		type: state.turn === 'x' ? 'SET_X' : 'SET_O',
 		index: parseInt(target.dataset.index, 10)
 	});
+
+	this.addTurn();
+};
+
+TicTacToe.prototype.addTurn = function() {
+	this.turnCounter = this.turnCounter + 1;
+	// At least 5 turns would be necessary to have a winner.
+	if (this.turnCounter > 4) {
+		this.checkWinner();
+	}
 };
 
 TicTacToe.prototype.render = function(event) {
@@ -80,6 +91,34 @@ TicTacToe.prototype.renderTurn = function(turn) {
 	}
 };
 
+TicTacToe.prototype.checkWinner = function() {
+	var state = this.store.getState();
+	var prevState = this.store.getPrevState();
+	this.checkRows(state.grid, prevState.turn);
+	this.checkColumns(state.grid, prevState.turn);
+	this.checkDiagonals(state.grid, prevState.turn);
+};
+
+TicTacToe.prototype.checkRows = function(grid, lastTurn) {
+	var regex = new RegExp(lastTurn, 'g');
+	var rows = [grid.slice(0, 3).join(''),
+					grid.slice(3, 6).join(''),
+					grid.slice(6, 9).join('')];
+
+	rows.forEach(function(row) {
+		if (row.match(regex) && row.match(regex).length === 3) {
+			console.log(lastTurn, ' wins!');
+		}
+	});
+};
+
+// TODO
+TicTacToe.prototype.checkColumns = function(grid, lastTurn) {
+};
+
+// TODO
+TicTacToe.prototype.checkDiagonals = function(grid, lastTurn) {
+};
 
 // Helpers
 // --------------
