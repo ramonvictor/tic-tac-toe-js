@@ -95,7 +95,8 @@ gulp.task('js-concat', function() {
 
 gulp.task('browser-sync', function() {
     browserSync.init({
-        server: './'
+        baseDir: 'public',
+        server: './public'
     });
 });
 

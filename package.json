@@ -1,11 +1,11 @@
 {
-  "name": "rv-redux-vanilla",
+  "name": "tic-tac-toe-js",
   "author": "Ramon Victor",
   "description": "Tic Tac Toe game using redux",
   "license": "MIT",
   "version": "1.0.0",
   "main": "web.js",
-  "repository": "ramonvictor/rv-redux-vanilla",
+  "repository": "ramonvictor/tic-tac-toe-js",
   "dependencies": {
     "express": "^4.10.2",
     "socket.io": "^1.4.5"
