@@ -84,6 +84,11 @@ body{
 		-moz-transform: rotate(-45deg);
 		transform: rotate(-45deg);
 	}
+
+	&.is-winner-cell:after,
+	&.is-winner-cell:before{
+		background: red;
+	}
 }
 
 .o{
@@ -92,4 +97,8 @@ body{
 	border-radius: 50%;
 	border: 15px solid #555;
 	margin: 31px auto 0;
+
+	&.is-winner-cell{
+		border-color: red;
+	}
 }

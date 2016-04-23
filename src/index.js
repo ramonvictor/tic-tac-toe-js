@@ -44,21 +44,28 @@ TicTacToe.prototype.onCellClick = function(event) {
 TicTacToe.prototype.onStoreUpdate = function(event) {
 	var self = this;
 	var data = event.detail;
+	var winnerSeq;
 
 	this.render(data.prevState, data.state);
 
-	if (this.winner.check(data.prevState, data.state)) {
-		this.finishGame(data.prevState.turn);
+	winnerSeq = this.winner.check(data.prevState, data.state);
+	if (Array.isArray(winnerSeq)) {
+		this.finishGame(data.prevState.turn, winnerSeq);
 	}
 };
 
-TicTacToe.prototype.finishGame = function(lastTurn) {
+TicTacToe.prototype.finishGame = function(lastTurn, winnerSeq) {
 	var self = this;
 
-	this.wait(500).then(function() {
+	self.store.dispatch({
+		type: 'SHOW_WINNER',
+		winner: lastTurn,
+		sequence: winnerSeq
+	});
+
+	this.wait(1000).then(function() {
 		self.store.dispatch({
-			type: 'END_GAME',
-			winner: lastTurn
+			type: 'RESTART_GAME'
 		});
 	});
 };
@@ -74,6 +81,10 @@ TicTacToe.prototype.render = function(prevState, state) {
 
 	if (prevState.score !== state.score) {
 		this.renderScore(state.score);
+	}
+
+	if (prevState.winnerSequence !== state.winnerSequence) {
+		this.renderWinnerSequence(state.winnerSequence);
 	}
 };
 
@@ -93,6 +104,16 @@ TicTacToe.prototype.renderGrid = function(grid) {
 		}
 
 		$cell.innerHTML = output;
+	});
+};
+
+TicTacToe.prototype.renderWinnerSequence = function(winnerSequence) {
+	var self = this;
+	var div;
+
+	winnerSequence.forEach(function(ind) {
+		div = qs('div', self.$tableCell[ind]);
+		div.classList.add('is-winner-cell');
 	});
 };
 

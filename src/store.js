@@ -5,12 +5,16 @@ function Store() {
 
 	this.prevState = {};
 	this.state = {};
+
 	this.state.grid = ['', '', '', '', '', '', '', '', ''];
+
 	this.state.turn = 'x';
 	this.state.score = {
 		x: 0,
 		o: 0
 	};
+
+	this.state.winnerSequence = [];
 
 	// TODO
 	this.state.turnTimer = '00:30';
@@ -38,11 +42,12 @@ Store.prototype.dispatch = function(action) {
 Store.prototype.update = function(state, action) {
 	return {
 		grid: state.grid.map(function(c, i) {
-			return (action.index === i || action.type === 'END_GAME') ?
+			return (action.index === i || action.type === 'RESTART_GAME') ?
 				updateCell(c, action) : c;
 		}),
 		turn: updateTurn(state.turn, action),
-		score: updateScore(state.score, action)
+		score: updateScore(state.score, action),
+		winnerSequence: updateWinnerSequence(state.winnerSequence, action)
 	};
 };
 
@@ -52,7 +57,7 @@ function updateCell(state, action) {
 			return 'x';
 		case 'SET_O':
 			return 'o';
-		case 'END_GAME':
+		case 'RESTART_GAME':
 			return '';
 		default:
 			return state;
@@ -65,7 +70,7 @@ function updateTurn(state, action) {
 			return 'o';
 		case 'SET_O':
 			return 'x';
-		case 'END_GAME':
+		case 'RESTART_GAME':
 			return 'x';
 		default:
 			return state;
@@ -76,11 +81,22 @@ function updateScore(state, action) {
 	var s;
 
 	switch (action.type) {
-		case 'END_GAME':
+		case 'SHOW_WINNER':
 			s = {};
 			s[action.winner] = state[action.winner];
 			s[action.winner]++;
 			return Object.assign({}, state, s);
+		default:
+			return state;
+	}
+}
+
+function updateWinnerSequence(state, action) {
+	switch (action.type) {
+		case 'SHOW_WINNER':
+			return action.sequence.slice();
+		case 'RESTART_GAME':
+			return [];
 		default:
 			return state;
 	}
