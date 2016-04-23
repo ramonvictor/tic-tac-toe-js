@@ -11,6 +11,7 @@ TicTacToe.prototype.init = function(config) {
 
 	this.$players = qs(config.playersElement);
 	this.$playerTurn = qsa('.js-player-turn', this.$players);
+	this.$playerScore = qsa('.js-player-score', this.$players);
 
 	this.eventListeners();
 };
@@ -39,7 +40,9 @@ TicTacToe.prototype.onCellClick = function(event) {
 		index: parseInt(target.dataset.index, 10)
 	});
 
-	this.addTurn();
+	window.setTimeout(function() {
+		this.addTurn();
+	}.bind(this), 1000);
 };
 
 TicTacToe.prototype.addTurn = function() {
@@ -59,6 +62,10 @@ TicTacToe.prototype.render = function(event) {
 
 	if (data.prevState.turn !== data.state.turn) {
 		this.renderTurn(data.state.turn);
+	}
+
+	if (data.prevState.score !== data.state.score) {
+		this.renderScore(data.state.score);
 	}
 };
 
@@ -91,38 +98,57 @@ TicTacToe.prototype.renderTurn = function(turn) {
 	}
 };
 
+TicTacToe.prototype.renderScore = function(score) {
+	this.$playerScore[0].innerHTML = score.x;
+	this.$playerScore[1].innerHTML = score.o;
+};
 
 TicTacToe.prototype.checkWinner = function() {
+	var directions = [[0, 1, 2, 3, 4, 5, 6, 7, 8], // rows
+							[0, 3, 6, 1, 4, 7, 2, 5, 8], // columns
+							[0, 4, 8, 2, 4, 6]]; // diagonals
+
 	var state = this.store.getState();
-	var prevState = this.store.getPrevState();
+	var lastTurn = this.store.getPrevState().turn;
+	var winner = this.checkIndexes(directions, state.grid, lastTurn);
 
-	var rows = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-	var columns = [0, 3, 6, 1, 4, 7, 2, 5, 8];
-	var diagonals = [0, 4, 8, 2, 4, 6];
-
-	this.checkIndexes(rows, state.grid, prevState.turn);
-	this.checkIndexes(columns, state.grid, prevState.turn);
-	this.checkIndexes(diagonals, state.grid, prevState.turn);
+	if (winner) {
+		this.turnCounter = 0;
+		this.store.dispatch({
+			type: 'END_GAME',
+			winner: lastTurn
+		});
+	}
 };
 
 
-TicTacToe.prototype.checkIndexes = function(indexes, grid, lastTurn) {
-	var cols = { x: 0, o: 0 };
+TicTacToe.prototype.checkIndexes = function(directions, grid, lastTurn) {
+	var dIndex = 0;
+	var counter;
 	var index;
+	var i;
 
-	for (var i = 0; i < indexes.length; i++) {
-		index = indexes[i];
-		cols[grid[index]]++;
+	while (directions[dIndex]) {
+		counter = { x: 0, o: 0 };
 
-		if (cols[lastTurn] === 3) {
-			console.log(lastTurn, 'wins!');
-			break;
+		for (i = 0; i < directions[dIndex].length; i++) {
+			index = directions[dIndex][i];
+			// Increment counter
+			counter[grid[index]]++;
+			// Break loop if there's a winner
+			if (counter[lastTurn] === 3) {
+				return true;
+			}
+			// Reset counter each three indexes
+			if ((i + 1) % 3 === 0) {
+				counter = { x: 0, o: 0 };
+			}
 		}
 
-		if ((i + 1) % 3 === 0) {
-			cols = { x: 0, o: 0 };
-		}
+		dIndex++;
 	}
+
+	return false;
 };
 
 // Helpers

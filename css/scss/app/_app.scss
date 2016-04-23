@@ -41,8 +41,19 @@ body{
 	}
 
 	& > .is-selected{
+		color: #e1e1e1;
+		background: #548C9E;
+	}
+
+	.score{
 		color: #fff;
-		background: #555;
+		display: inline-block;
+		float: right;
+		background: #272727;
+		padding: 1px 5px;
+		border-radius: 2px;
+		border-bottom: 1px solid #757575;
+		margin-top: -1px;
 	}
 }
 
