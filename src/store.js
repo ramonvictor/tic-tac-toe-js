@@ -15,6 +15,7 @@ function Store() {
 	};
 
 	this.state.winnerSequence = [];
+	this.state.turnCounter = 0;
 
 	// TODO
 	this.state.turnTimer = '00:30';
@@ -47,7 +48,8 @@ Store.prototype.update = function(state, action) {
 		}),
 		turn: updateTurn(state.turn, action),
 		score: updateScore(state.score, action),
-		winnerSequence: updateWinnerSequence(state.winnerSequence, action)
+		winnerSequence: updateWinnerSequence(state.winnerSequence, action),
+		turnCounter: updateCounter(state.turnCounter, action)
 	};
 };
 
@@ -101,3 +103,17 @@ function updateWinnerSequence(state, action) {
 			return state;
 	}
 }
+
+function updateCounter(state, action) {
+	switch (action.type) {
+		case 'SET_X':
+			return state + 1;
+		case 'SET_O':
+			return state + 1;
+		case 'RESTART_GAME':
+			return 0;
+		default:
+			return state;
+	}
+}
+
