@@ -1,6 +1,7 @@
 // Application
 // --------------
 function TicTacToe() {
+	this.socket = io();
 	this.store = new Store();
 	this.events = new Events();
 	this.winner = new Winner();
@@ -22,23 +23,34 @@ TicTacToe.prototype.init = function(config) {
 TicTacToe.prototype.eventListeners = function() {
 	this.$table.addEventListener('click', this.onCellClick.bind(this));
 	this.events.on('store:update', this.onStoreUpdate.bind(this));
+
+	this.socket.on('dispatch', this.onSocketDispatch.bind(this));
+};
+
+TicTacToe.prototype.onSocketDispatch = function(data) {
+	this.store.dispatch(data);
 };
 
 TicTacToe.prototype.onCellClick = function(event) {
 	var target = event.target;
 	var classList = target.classList;
 	var state;
+	var action;
 
 	if (!classList.contains('js-cell') || classList.contains('is-filled')) {
 		return;
 	}
 
 	state = this.store.getState();
-
-	this.store.dispatch({
+	action = {
 		type: state.turn === 'x' ? 'SET_X' : 'SET_O',
 		index: parseInt(target.dataset.index, 10)
-	});
+	};
+
+	this.store.dispatch(action);
+
+	// Propagate action to other users
+	this.socket.emit('dispatch', action);
 };
 
 TicTacToe.prototype.onStoreUpdate = function(event) {

@@ -22,8 +22,8 @@ var autoprefixer = require('gulp-autoprefixer');        // sets missing browserp
 
 var target = {
     sass_src : 'css/scss/**/*.scss',                        // all sass files
-    css_dest : 'css',                                // where to put minified css
-    css_output : 'css/*.css',                                // where to put minified css
+    css_dest : 'public/css',                                // where to put minified css
+    css_output : 'public/css/*.css',                                // where to put minified css
     sass_folder : 'css/scss',                                // where to put minified css
     js_lint_src : [                                     // all js that should be linted
         'src/events.js',
@@ -43,8 +43,8 @@ var target = {
         'src/winner.js',
         'src/index.js'
     ],
-    js_dest : 'build',                                  // where to put minified js
-    css_img : 'css/i'
+    js_dest : 'public/js',                                  // where to put minified js
+    css_img : 'public/css/i'
 };
 
 
