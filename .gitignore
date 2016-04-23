@@ -30,6 +30,7 @@
 # OS generated files #
 ######################
 .DS_Store
+npm-debug.log
 .DS_Store?
 ._*
 .Spotlight-V100
@@ -38,5 +39,4 @@
 ehthumbs.db
 Thumbs.db
 node_modules
-style.css
-index.min.js
+/*.env

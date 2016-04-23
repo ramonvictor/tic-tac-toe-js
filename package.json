@@ -2,8 +2,9 @@
   "name": "rv-redux-vanilla",
   "author": "Ramon Victor",
   "description": "Tic Tac Toe game using redux",
+  "license": "MIT",
   "version": "1.0.0",
-  "main": "gulpfile.js",
+  "main": "web.js",
   "repository": "ramonvictor/rv-redux-vanilla",
   "devDependencies": {
     "gulp": "^3.6.0",
@@ -22,5 +23,8 @@
   "dependencies": {
     "express": "^4.10.2",
     "socket.io": "^1.4.5"
+  },
+  "engines": {
+    "node": "5.0.0"
   }
 }
