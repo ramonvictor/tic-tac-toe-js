@@ -1,6 +1,8 @@
 // Store
 // --------------
 function Store() {
+	this.events = new Events();
+
 	this.prevState = {};
 	this.state = {};
 	this.state.grid = ['', '', '', '', '', '', '', '', ''];
@@ -24,21 +26,13 @@ Store.prototype.getPrevState = function(action) {
 
 Store.prototype.dispatch = function(action) {
 	this.prevState = this.state;
-
 	this.state = this.update(this.state, action);
 
-	this.emit(this.prevState, this.state);
-};
-
-Store.prototype.emit = function(prevState, state) {
-	var event = new CustomEvent('store:update', {
-		detail: {
-			prevState: prevState,
-			state: state
-		}
-	});
-
-	document.dispatchEvent(event);
+	this.events
+		.trigger('store:update', {
+			prevState: this.prevState,
+			state: this.state
+		});
 };
 
 Store.prototype.update = function(state, action) {
@@ -79,9 +73,11 @@ function updateTurn(state, action) {
 }
 
 function updateScore(state, action) {
+	var s;
+
 	switch (action.type) {
 		case 'END_GAME':
-			var s = {};
+			s = {};
 			s[action.winner] = state[action.winner];
 			s[action.winner]++;
 			return Object.assign({}, state, s);

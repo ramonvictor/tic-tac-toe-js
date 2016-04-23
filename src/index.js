@@ -2,6 +2,9 @@
 // --------------
 function TicTacToe() {
 	this.store = new Store();
+	this.events = new Events();
+	this.winner = new Winner();
+
 	this.turnCounter = 0;
 }
 
@@ -17,19 +20,16 @@ TicTacToe.prototype.init = function(config) {
 };
 
 TicTacToe.prototype.eventListeners = function() {
-	var self = this;
-
-	toArray(this.$tableCell).forEach(function(cell) {
-		cell.addEventListener('click', self.onCellClick.bind(self));
-	});
-
-	document.addEventListener('store:update', this.render.bind(this), false);
+	this.$table.addEventListener('click', this.onCellClick.bind(this));
+	this.events.on('store:update', this.onStoreUpdate.bind(this));
 };
 
 TicTacToe.prototype.onCellClick = function(event) {
-	var target = event.currentTarget;
+	var target = event.target;
+	var classList = target.classList;
 	var state;
-	if (target.classList.contains('is-filled')) {
+
+	if (!classList.contains('js-cell') || classList.contains('is-filled')) {
 		return;
 	}
 
@@ -39,33 +39,35 @@ TicTacToe.prototype.onCellClick = function(event) {
 		type: state.turn === 'x' ? 'SET_X' : 'SET_O',
 		index: parseInt(target.dataset.index, 10)
 	});
-
-	window.setTimeout(function() {
-		this.addTurn();
-	}.bind(this), 1000);
 };
 
-TicTacToe.prototype.addTurn = function() {
-	this.turnCounter = this.turnCounter + 1;
-	// At least 5 turns would be necessary to have a winner.
-	if (this.turnCounter > 4) {
-		this.checkWinner();
-	}
-};
-
-TicTacToe.prototype.render = function(event) {
+TicTacToe.prototype.onStoreUpdate = function(event) {
+	var self = this;
 	var data = event.detail;
 
-	if (data.prevState.grid !== data.state.grid) {
-		this.renderGrid(data.state.grid);
+	this.render(data.prevState, data.state);
+
+	if (this.winner.check(data.prevState, data.state)) {
+		this.wait(500).then(function() {
+			self.store.dispatch({
+				type: 'END_GAME',
+				winner: data.prevState.turn
+			});
+		});
+	}
+};
+
+TicTacToe.prototype.render = function(prevState, state) {
+	if (prevState.grid !== state.grid) {
+		this.renderGrid(state.grid);
 	}
 
-	if (data.prevState.turn !== data.state.turn) {
-		this.renderTurn(data.state.turn);
+	if (prevState.turn !== state.turn) {
+		this.renderTurn(state.turn);
 	}
 
-	if (data.prevState.score !== data.state.score) {
-		this.renderScore(data.state.score);
+	if (prevState.score !== state.score) {
+		this.renderScore(state.score);
 	}
 };
 
@@ -103,52 +105,13 @@ TicTacToe.prototype.renderScore = function(score) {
 	this.$playerScore[1].innerHTML = score.o;
 };
 
-TicTacToe.prototype.checkWinner = function() {
-	var directions = [[0, 1, 2, 3, 4, 5, 6, 7, 8], // rows
-							[0, 3, 6, 1, 4, 7, 2, 5, 8], // columns
-							[0, 4, 8, 2, 4, 6]]; // diagonals
-
-	var state = this.store.getState();
-	var lastTurn = this.store.getPrevState().turn;
-	var winner = this.checkIndexes(directions, state.grid, lastTurn);
-
-	if (winner) {
-		this.turnCounter = 0;
-		this.store.dispatch({
-			type: 'END_GAME',
-			winner: lastTurn
-		});
-	}
-};
-
-
-TicTacToe.prototype.checkIndexes = function(directions, grid, lastTurn) {
-	var dIndex = 0;
-	var counter;
-	var index;
-	var i;
-
-	while (directions[dIndex]) {
-		counter = { x: 0, o: 0 };
-
-		for (i = 0; i < directions[dIndex].length; i++) {
-			index = directions[dIndex][i];
-			// Increment counter
-			counter[grid[index]]++;
-			// Break loop if there's a winner
-			if (counter[lastTurn] === 3) {
-				return true;
-			}
-			// Reset counter each three indexes
-			if ((i + 1) % 3 === 0) {
-				counter = { x: 0, o: 0 };
-			}
-		}
-
-		dIndex++;
-	}
-
-	return false;
+TicTacToe.prototype.wait = function(ms) {
+	ms = ms || 500;
+	return new Promise(function(resolve, reject){
+		window.setTimeout(function() {
+			resolve();
+		}, ms);
+	});
 };
 
 // Helpers
@@ -161,8 +124,4 @@ function qs(selector, context) {
 function qsa(selector, context) {
 	context = context || document;
 	return context.querySelectorAll(selector);
-}
-
-function toArray(arr) {
-	return [].slice.call(arr);
 }

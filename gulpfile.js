@@ -26,14 +26,21 @@ var target = {
     css_output : 'css/*.css',                                // where to put minified css
     sass_folder : 'css/scss',                                // where to put minified css
     js_lint_src : [                                     // all js that should be linted
+        'src/events.js',
         'src/store.js',
+        'src/winner.js',
         'src/index.js'
     ],
     js_uglify_src : [                                   // all js files that should not be concatinated
+        'src/events.js',
+        'src/store.js',
+        'src/winner.js',
         'src/index.js'
     ],
     js_concat_src : [                                   // all js files that should be concatinated
+        'src/events.js',
         'src/store.js',
+        'src/winner.js',
         'src/index.js'
     ],
     js_dest : 'build',                                  // where to put minified js
