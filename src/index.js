@@ -48,13 +48,19 @@ TicTacToe.prototype.onStoreUpdate = function(event) {
 	this.render(data.prevState, data.state);
 
 	if (this.winner.check(data.prevState, data.state)) {
-		this.wait(500).then(function() {
-			self.store.dispatch({
-				type: 'END_GAME',
-				winner: data.prevState.turn
-			});
-		});
+		this.finishGame(data.prevState.turn);
 	}
+};
+
+TicTacToe.prototype.finishGame = function(lastTurn) {
+	var self = this;
+
+	this.wait(500).then(function() {
+		self.store.dispatch({
+			type: 'END_GAME',
+			winner: lastTurn
+		});
+	});
 };
 
 TicTacToe.prototype.render = function(prevState, state) {
