@@ -93,7 +93,6 @@ gulp.task('js-concat', function() {
 /*******************************************************************************
 5. BROWSER SYNC
 *******************************************************************************/
-
 gulp.task('browser-sync', ['nodemon'], function() {
     browserSync.init({
         proxy: 'http://localhost:' + port,
@@ -102,18 +101,7 @@ gulp.task('browser-sync', ['nodemon'], function() {
     });
 });
 
-gulp.task('gulp-nodemon', function(cb) {
-    var started = false;
-    return nodemon({
-        script: 'index.js'
-    }).on('start', function() {
-        if (!started) {
-            cb();
-            started = true;
-        }
-    });
-});
-
+// Reference: https://gist.github.com/sogko/b53d33d4f3b40d3b4b2e
 gulp.task('nodemon', function(cb) {
     return nodemon({
       script: 'index.js'
