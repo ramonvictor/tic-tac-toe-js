@@ -12,9 +12,10 @@ var notify = require('gulp-notify');                    // send notifications to
 var plumber = require('gulp-plumber');                  // disable interuption
 var stylish = require('jshint-stylish');                // make errors look good in shell
 var minifycss = require('gulp-minify-css');             // minify the css files
-var browserSync = require('browser-sync').create();              // inject code to all devices
+var browserSync = require('browser-sync').create();     // inject code to all devices
 var autoprefixer = require('gulp-autoprefixer');        // sets missing browserprefixes
-
+var nodemon = require('gulp-nodemon');
+var port = process.env.PORT || 3000;
 
 /*******************************************************************************
 2. FILE DESTINATIONS (RELATIVE TO ASSSETS FOLDER)
@@ -93,11 +94,30 @@ gulp.task('js-concat', function() {
 5. BROWSER SYNC
 *******************************************************************************/
 
-gulp.task('browser-sync', function() {
+gulp.task('browser-sync', ['nodemon'], function() {
     browserSync.init({
-        baseDir: 'public',
-        server: './public'
+        proxy: 'http://localhost:' + port,
+        files: ['public/**/*.*'],
+        port: 5000
     });
+});
+
+gulp.task('gulp-nodemon', function(cb) {
+    var started = false;
+    return nodemon({
+        script: 'index.js'
+    }).on('start', function() {
+        if (!started) {
+            cb();
+            started = true;
+        }
+    });
+});
+
+gulp.task('nodemon', function(cb) {
+    return nodemon({
+      script: 'index.js'
+    }).once('start', cb);
 });
 
 /*******************************************************************************
