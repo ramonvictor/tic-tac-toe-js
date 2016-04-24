@@ -8,11 +8,25 @@ body{
 .container{
 	width: 500px;
 	margin: 0 auto;
-	padding-bottom: 50px;
 }
 
 .header{
 	font-size: 18px;
+}
+
+.footer{
+	padding: 35px 0;
+	color: #96a8c1;
+	text-align: center;
+
+	a {
+		color: #c4d0e2;
+		text-decoration: none;
+
+		&:hover{
+			color: #fff;
+		}
+	}
 }
 
 .tic-tac-toe-table{
