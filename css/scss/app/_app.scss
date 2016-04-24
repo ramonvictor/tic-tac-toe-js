@@ -197,6 +197,7 @@ body{
 	.tic-tac-toe-table{
 		width: 100%;
 		height: auto;
+		-webkit-tap-highlight-color: rgba(0,0,0,0);
 	}
 
 	.tic-tac-toe-table-cell{
@@ -219,21 +220,32 @@ body{
 			width: 1px;
 			float: left;
 		}
-	}
 
-	.x{
-		margin-left: 5px;
-		&:before, &:after{
-			width: 10px;
-			height: 65px;
-			top: 16px;
+		.x{
+			width: 60px;
+			height: 60px;
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			margin: -30px 0 0 -30px;
+
+			&:before, &:after{
+				width: 10px;
+				height: 65px;
+				top: -3px;
+				left: 25px;
+				margin: 0;
+			}
 		}
-	}
 
-	.o{
-		width: 60px;
-		height: 60px;
-		border: 10px solid #fff;
-		margin: 20px auto;
+		.o{
+			width: 60px;
+			height: 60px;
+			border-width: 10px;
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			margin: -30px 0 0 -30px;
+		}
 	}
 }
