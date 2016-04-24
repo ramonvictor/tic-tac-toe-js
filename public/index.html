@@ -45,11 +45,28 @@
 <script src="js/index.min.js"></script>
 <script>
 	document.addEventListener('DOMContentLoaded', function() {
+		var hash = window.location.hash;
+		var guid = function() {
+			function s4() {
+				return Math.floor((1 + Math.random()) * 0x10000)
+				.toString(16)
+				.substring(1);
+			}
+
+			return s4() + s4() + '-' + s4() + '-' + s4() +
+					'-' + s4() + '-' + s4() + s4() + s4();
+		};
+
+		if (!hash || !hash.length > 1) {
+			window.location.href = window.location.href + '#' + guid();
+		}
+
 		var T = new TicTacToe();
 
 		T.init({
 			gridElement: '.js-table',
-			playersElement: '.js-players-display'
+			playersElement: '.js-players-display',
+			gameId: hash.replace('#', '')
 		});
 	}, false);
 </script>
