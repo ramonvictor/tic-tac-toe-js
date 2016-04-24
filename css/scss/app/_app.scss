@@ -8,6 +8,7 @@ body{
 .container{
 	width: 500px;
 	margin: 0 auto;
+	padding-bottom: 50px;
 }
 
 .header{
@@ -31,13 +32,10 @@ body{
 
 	& > li {
 		padding: 40px 15px;
-		display: inline-block;
 		width: 50%;
+		float: left;
 		position: relative;
-	}
-
-	& > .is-selected{
-		color: #e1e1e1;
+		box-sizing: border-box;
 	}
 
 	.score{
@@ -64,6 +62,7 @@ body{
 	left: 90px;
 }
 
+
 .turn-player {
 	width: 60px;
 	height: 60px;
@@ -88,10 +87,12 @@ body{
 		position: absolute;
 		left: 50%;
 		top: 50%;
+		z-index: 2;
 	}
 
 	& > .x{
 		margin: 0;
+		z-index: 2;
 
 		&:before,
 		&:after{
@@ -101,6 +102,23 @@ body{
 			left: 34px;
 		}
 	}
+
+	.is-selected &:before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 60px;
+		height: 60px;
+		content: '';
+		border-radius: 50%;
+		border: 3px solid transparent;
+		border-top-color: rgba(255,255,255,.3);
+		border-bottom-color: rgba(255,255,255,.3);
+		animation: spinner 1s ease infinite;
+		-webkit-animation: spinner 1s ease infinite;
+	}
+
 }
 
 
@@ -186,6 +204,16 @@ body{
 	100% { -webkit-transform: translate(1px, -2px) rotate(-1deg); }
 }
 
+@keyframes spinner {
+    to {transform: rotate(360deg);}
+}
+
+@-webkit-keyframes spinner {
+    to {-webkit-transform: rotate(360deg);}
+}
+
+// Mobile
+// --------
 @media only screen and (max-device-width: 499px) {
 	.container {
 		width: 100%;
@@ -249,3 +277,5 @@ body{
 		}
 	}
 }
+
+
