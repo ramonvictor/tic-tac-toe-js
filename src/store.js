@@ -16,9 +16,6 @@ function Store() {
 
 	this.state.winnerSequence = [];
 	this.state.turnCounter = 0;
-
-	// TODO
-	this.state.turnTimer = '00:30';
 }
 
 Store.prototype.getState = function(action) {

@@ -93,7 +93,7 @@ gulp.task('js-concat', function() {
 /*******************************************************************************
 5. BROWSER SYNC
 *******************************************************************************/
-gulp.task('browser-sync', ['nodemon'], function() {
+gulp.task('browser-sync', function() {
     browserSync.init({
         proxy: 'http://localhost:' + port,
         files: ['public/**/*.*'],
@@ -118,4 +118,4 @@ gulp.task('watch', function() {
     gulp.watch(target.js_uglify_src, ['js-concat']).on('change', browserSync.reload);
 });
 
-gulp.task('default', ['compass', 'js-lint', 'js-concat', 'browser-sync', 'watch']);
+gulp.task('default', ['compass', 'js-lint', 'js-concat', 'nodemon', 'browser-sync', 'watch']);

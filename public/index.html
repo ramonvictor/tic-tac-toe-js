@@ -8,12 +8,18 @@
 </head>
 <body>
 <div class="container">
-	<sidebar class="sidebar">
+	<header class="header">
 		<ul class="turn-display js-players-display">
-			<li class="js-player-turn is-selected">Player 1 (x)<span class="js-player-score score">0</span></li>
-			<li class="js-player-turn">Player 2 (o)<span class="js-player-score score">0</span></li>
+			<li class="js-player-turn is-x is-selected">
+				<div class="turn-player"><div class="x"></div></div>
+				<span class="js-player-score score">0</span>
+			</li>
+			<li class="js-player-turn is-o">
+				<div class="turn-player"><div class="o"></div></div>
+				<span class="js-player-score score">0</span>
+			</li>
 		</ul>
-	</sidebar>
+	</header>
 	<table class="tic-tac-toe-table js-table">
 		<tbody>
 			<tr>
