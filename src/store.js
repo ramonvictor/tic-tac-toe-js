@@ -1,8 +1,6 @@
-// Store
-// --------------
-function Store() {
-	this.events = require('./events');
+var events = require('./events');
 
+function Store() {
 	this.prevState = {};
 	this.state = {};
 
@@ -30,7 +28,7 @@ Store.prototype.dispatch = function(action) {
 	this.prevState = this.state;
 	this.state = this.update(this.state, action);
 
-	this.events
+	events
 		.trigger('store:update', {
 			prevState: this.prevState,
 			state: this.state

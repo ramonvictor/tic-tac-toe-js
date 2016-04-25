@@ -70,6 +70,15 @@
 		return context.querySelectorAll(selector);
 	};
 
+	utils.wait = function(ms) {
+		ms = ms || 500;
+		return new Promise(function(resolve, reject){
+			window.setTimeout(function() {
+				resolve();
+			}, ms);
+		});
+	};
+
 	module.exports = utils;
 
 /***/ },
@@ -97,11 +106,9 @@
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	// Store
-	// --------------
-	function Store() {
-		this.events = __webpack_require__(2);
+	var events = __webpack_require__(2);
 
+	function Store() {
 		this.prevState = {};
 		this.state = {};
 
@@ -129,7 +136,7 @@
 		this.prevState = this.state;
 		this.state = this.update(this.state, action);
 
-		this.events
+		events
 			.trigger('store:update', {
 				prevState: this.prevState,
 				state: this.state
@@ -390,11 +397,13 @@
 	// Application
 	// --------------
 	var utils = __webpack_require__(1);
+	var scoreView = __webpack_require__(5);
+	var gridView = __webpack_require__(6);
+	var store = __webpack_require__(3);
+	var events = __webpack_require__(2);
+	var socket = io();
 
 	function TicTacToe() {
-		this.socket = io();
-		this.store = __webpack_require__(3);
-		this.events = __webpack_require__(2);
 		this.winner = __webpack_require__(4);
 	}
 
@@ -404,22 +413,22 @@
 
 		this.gameId = config.gameId;
 
-		this.scoreView = __webpack_require__(5)(this.$players);
-		this.gridView = __webpack_require__(6)(this.$table);
+		this.scoreView = scoreView(this.$players);
+		this.gridView = gridView(this.$table);
 
 		this.eventListeners();
 	};
 
 	TicTacToe.prototype.eventListeners = function() {
 		this.$table.addEventListener('click', this.onCellClick.bind(this));
-		this.events.on('store:update', this.onStoreUpdate.bind(this));
-		this.socket.on('dispatch', this.onSocketDispatch.bind(this));
+		events.on('store:update', this.onStoreUpdate.bind(this));
+		socket.on('dispatch', this.onSocketDispatch.bind(this));
 	};
 
 	// TODO: fix this with socket channel
 	TicTacToe.prototype.onSocketDispatch = function(data) {
 		if (data.gameId === this.gameId) {
-			this.store.dispatch(data);
+			store.dispatch(data);
 		}
 	};
 
@@ -437,7 +446,7 @@
 	};
 
 	TicTacToe.prototype.updateCell = function(index) {
-		var state = this.store.getState();
+		var state = store.getState();
 		var action = {
 			type: state.turn === 'x' ? 'SET_X' : 'SET_O',
 			index: parseInt(index, 10),
@@ -445,13 +454,12 @@
 		};
 
 		// Dispatch action
-		this.store.dispatch(action);
-		this.socket.emit('dispatch', action);
+		store.dispatch(action);
+		socket.emit('dispatch', action);
 	};
 
 	TicTacToe.prototype.onStoreUpdate = function(event) {
 		var data = event.detail;
-		var winnerSeq;
 
 		// Render
 		this.render(data.prevState, data.state);
@@ -472,7 +480,7 @@
 	};
 
 	TicTacToe.prototype.showWinner = function(lastTurn, winnerSeq) {
-		this.store.dispatch({
+		store.dispatch({
 			type: 'SHOW_WINNER',
 			winner: lastTurn,
 			sequence: winnerSeq
@@ -501,21 +509,10 @@
 
 
 	TicTacToe.prototype.restartGame = function() {
-		var self = this;
-
-		this.wait(1500).then(function() {
-			self.store.dispatch({
+		utils.wait(1500).then(function() {
+			store.dispatch({
 				type: 'RESTART_GAME'
 			});
-		});
-	};
-
-	TicTacToe.prototype.wait = function(ms) {
-		ms = ms || 500;
-		return new Promise(function(resolve, reject){
-			window.setTimeout(function() {
-				resolve();
-			}, ms);
 		});
 	};
 

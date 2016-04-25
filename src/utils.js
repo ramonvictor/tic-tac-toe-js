@@ -10,4 +10,13 @@ utils.qsa = function(selector, context) {
 	return context.querySelectorAll(selector);
 };
 
+utils.wait = function(ms) {
+	ms = ms || 500;
+	return new Promise(function(resolve, reject){
+		window.setTimeout(function() {
+			resolve();
+		}, ms);
+	});
+};
+
 module.exports = utils;

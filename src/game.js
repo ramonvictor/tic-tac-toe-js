@@ -1,11 +1,13 @@
 // Application
 // --------------
 var utils = require('./utils');
+var scoreView = require('./score-view');
+var gridView = require('./grid-view');
+var store = require('./store');
+var events = require('./events');
+var socket = io();
 
 function TicTacToe() {
-	this.socket = io();
-	this.store = require('./store');
-	this.events = require('./events');
 	this.winner = require('./winner');
 }
 
@@ -15,22 +17,22 @@ TicTacToe.prototype.init = function(config) {
 
 	this.gameId = config.gameId;
 
-	this.scoreView = require('./score-view')(this.$players);
-	this.gridView = require('./grid-view')(this.$table);
+	this.scoreView = scoreView(this.$players);
+	this.gridView = gridView(this.$table);
 
 	this.eventListeners();
 };
 
 TicTacToe.prototype.eventListeners = function() {
 	this.$table.addEventListener('click', this.onCellClick.bind(this));
-	this.events.on('store:update', this.onStoreUpdate.bind(this));
-	this.socket.on('dispatch', this.onSocketDispatch.bind(this));
+	events.on('store:update', this.onStoreUpdate.bind(this));
+	socket.on('dispatch', this.onSocketDispatch.bind(this));
 };
 
 // TODO: fix this with socket channel
 TicTacToe.prototype.onSocketDispatch = function(data) {
 	if (data.gameId === this.gameId) {
-		this.store.dispatch(data);
+		store.dispatch(data);
 	}
 };
 
@@ -48,7 +50,7 @@ TicTacToe.prototype.onCellClick = function(event) {
 };
 
 TicTacToe.prototype.updateCell = function(index) {
-	var state = this.store.getState();
+	var state = store.getState();
 	var action = {
 		type: state.turn === 'x' ? 'SET_X' : 'SET_O',
 		index: parseInt(index, 10),
@@ -56,13 +58,12 @@ TicTacToe.prototype.updateCell = function(index) {
 	};
 
 	// Dispatch action
-	this.store.dispatch(action);
-	this.socket.emit('dispatch', action);
+	store.dispatch(action);
+	socket.emit('dispatch', action);
 };
 
 TicTacToe.prototype.onStoreUpdate = function(event) {
 	var data = event.detail;
-	var winnerSeq;
 
 	// Render
 	this.render(data.prevState, data.state);
@@ -83,7 +84,7 @@ TicTacToe.prototype.checkWinner = function(prevState, state) {
 };
 
 TicTacToe.prototype.showWinner = function(lastTurn, winnerSeq) {
-	this.store.dispatch({
+	store.dispatch({
 		type: 'SHOW_WINNER',
 		winner: lastTurn,
 		sequence: winnerSeq
@@ -112,21 +113,10 @@ TicTacToe.prototype.render = function(prevState, state) {
 
 
 TicTacToe.prototype.restartGame = function() {
-	var self = this;
-
-	this.wait(1500).then(function() {
-		self.store.dispatch({
+	utils.wait(1500).then(function() {
+		store.dispatch({
 			type: 'RESTART_GAME'
 		});
-	});
-};
-
-TicTacToe.prototype.wait = function(ms) {
-	ms = ms || 500;
-	return new Promise(function(resolve, reject){
-		window.setTimeout(function() {
-			resolve();
-		}, ms);
 	});
 };
 
