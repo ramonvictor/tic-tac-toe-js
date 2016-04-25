@@ -25,6 +25,7 @@ TicTacToe.prototype.eventListeners = function() {
 	this.socket.on('dispatch', this.onSocketDispatch.bind(this));
 };
 
+// TODO: fix this with socket channel
 TicTacToe.prototype.onSocketDispatch = function(data) {
 	if (data.gameId === this.gameId) {
 		this.store.dispatch(data);
@@ -65,6 +66,7 @@ TicTacToe.prototype.onStoreUpdate = function(event) {
 	this.render(data.prevState, data.state);
 
 	// Check winner
+	// TODO: move this to proper place
 	this.checkWinner(data.prevState, data.state);
 };
 
@@ -106,6 +108,7 @@ TicTacToe.prototype.render = function(prevState, state) {
 	}
 };
 
+// TODO: move to grid component
 TicTacToe.prototype.renderGrid = function(grid) {
 	var self = this;
 	var selected = 'is-filled';
@@ -125,6 +128,7 @@ TicTacToe.prototype.renderGrid = function(grid) {
 	});
 };
 
+// TODO: move to grid component
 TicTacToe.prototype.renderWinnerSequence = function(seq) {
 	var self = this;
 	var div;
@@ -135,6 +139,7 @@ TicTacToe.prototype.renderWinnerSequence = function(seq) {
 	});
 };
 
+// TODO: move to score/turn component
 TicTacToe.prototype.renderTurn = function(turn) {
 	if (turn === 'o') {
 		this.$playerTurn[0].classList.remove('is-selected');
@@ -145,6 +150,7 @@ TicTacToe.prototype.renderTurn = function(turn) {
 	}
 };
 
+// TODO: move to score/turn component
 TicTacToe.prototype.renderScore = function(score) {
 	this.$playerScore[0].innerHTML = score.x;
 	this.$playerScore[1].innerHTML = score.o;
@@ -153,7 +159,7 @@ TicTacToe.prototype.renderScore = function(score) {
 TicTacToe.prototype.restartGame = function() {
 	var self = this;
 
-	this.wait(1000).then(function() {
+	this.wait(1500).then(function() {
 		self.store.dispatch({
 			type: 'RESTART_GAME'
 		});

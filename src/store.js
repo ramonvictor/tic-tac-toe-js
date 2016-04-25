@@ -39,10 +39,7 @@ Store.prototype.dispatch = function(action) {
 
 Store.prototype.update = function(state, action) {
 	return {
-		grid: state.grid.map(function(c, i) {
-			return (action.index === i || action.type === 'RESTART_GAME') ?
-				updateCell(c, action) : c;
-		}),
+		grid: updateGrid(state.grid, action),
 		turn: updateTurn(state.turn, action),
 		score: updateScore(state.score, action),
 		winnerSequence: updateWinnerSequence(state.winnerSequence, action),
@@ -50,7 +47,14 @@ Store.prototype.update = function(state, action) {
 	};
 };
 
-function updateCell(state, action) {
+function updateGrid(grid, action) {
+	return grid.map(function(c, i) {
+		return (action.index === i || action.type === 'RESTART_GAME') ?
+			updateCell(c, action) : c;
+	});
+}
+
+function updateCell(cell, action) {
 	switch (action.type) {
 		case 'SET_X':
 			return 'x';
@@ -59,11 +63,11 @@ function updateCell(state, action) {
 		case 'RESTART_GAME':
 			return '';
 		default:
-			return state;
+			return cell;
 	}
 }
 
-function updateTurn(state, action) {
+function updateTurn(turn, action) {
 	switch (action.type) {
 		case 'SET_X':
 			return 'o';
@@ -72,45 +76,41 @@ function updateTurn(state, action) {
 		case 'RESTART_GAME':
 			return 'x';
 		default:
-			return state;
+			return turn;
 	}
 }
 
-function updateScore(state, action) {
-	var s;
-
+function updateScore(score, action) {
 	switch (action.type) {
 		case 'SHOW_WINNER':
-			s = {};
-			s[action.winner] = state[action.winner];
-			s[action.winner]++;
-			return Object.assign({}, state, s);
+			var newScore = {};
+			newScore[action.winner] = score[action.winner] + 1;
+			return Object.assign({}, score, newScore);
 		default:
-			return state;
+			return score;
 	}
 }
 
-function updateWinnerSequence(state, action) {
+function updateWinnerSequence(winnerSequence, action) {
 	switch (action.type) {
 		case 'SHOW_WINNER':
 			return action.sequence.slice();
 		case 'RESTART_GAME':
 			return [];
 		default:
-			return state;
+			return winnerSequence;
 	}
 }
 
-function updateCounter(state, action) {
+function updateCounter(turnCounter, action) {
 	switch (action.type) {
 		case 'SET_X':
-			return state + 1;
+			return turnCounter + 1;
 		case 'SET_O':
-			return state + 1;
+			return turnCounter + 1;
 		case 'RESTART_GAME':
 			return 0;
 		default:
-			return state;
+			return turnCounter;
 	}
 }
-
