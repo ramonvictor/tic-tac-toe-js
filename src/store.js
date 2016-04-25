@@ -49,8 +49,13 @@ Store.prototype.update = function(state, action) {
 
 function updateGrid(grid, action) {
 	return grid.map(function(c, i) {
-		return (action.index === i || action.type === 'RESTART_GAME') ?
-			updateCell(c, action) : c;
+		var output = c;
+
+		if (action.index === i || action.type === 'RESTART_GAME') {
+			output = updateCell(c, action);
+		}
+
+		return output;
 	});
 }
 

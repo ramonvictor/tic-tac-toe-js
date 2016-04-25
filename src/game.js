@@ -1,5 +1,7 @@
 // Application
 // --------------
+var utils = require('./utils');
+
 function TicTacToe() {
 	this.socket = io();
 	this.store = require('./store');
@@ -8,13 +10,13 @@ function TicTacToe() {
 }
 
 TicTacToe.prototype.init = function(config) {
-	this.gameId = config.gameId;
-	this.$table = qs(config.gridElement);
-	this.$tableCell = qsa('.js-cell', this.$table);
+	this.$table = utils.qs(config.gridElement);
+	this.$players = utils.qs(config.playersElement);
 
-	this.$players = qs(config.playersElement);
-	this.$playerTurn = qsa('.js-player-turn', this.$players);
-	this.$playerScore = qsa('.js-player-score', this.$players);
+	this.gameId = config.gameId;
+
+	this.scoreView = require('./score-view')(this.$players);
+	this.gridView = require('./grid-view')(this.$table);
 
 	this.eventListeners();
 };
@@ -92,69 +94,22 @@ TicTacToe.prototype.showWinner = function(lastTurn, winnerSeq) {
 
 TicTacToe.prototype.render = function(prevState, state) {
 	if (prevState.grid !== state.grid) {
-		this.renderGrid(state.grid);
+		this.gridView.render(state.grid, 'grid');
 	}
 
 	if (prevState.turn !== state.turn) {
-		this.renderTurn(state.turn);
+		this.scoreView.render(state.turn, 'turn');
 	}
 
 	if (prevState.score !== state.score) {
-		this.renderScore(state.score);
+		this.scoreView.render(state.score, 'score');
 	}
 
 	if (prevState.winnerSequence !== state.winnerSequence) {
-		this.renderWinnerSequence(state.winnerSequence);
+		this.gridView.render(state.winnerSequence, 'winner');
 	}
 };
 
-// TODO: move to grid component
-TicTacToe.prototype.renderGrid = function(grid) {
-	var self = this;
-	var selected = 'is-filled';
-
-	grid.forEach(function(cell, index) {
-		var output = '';
-		var $cell = self.$tableCell[index];
-
-		$cell.classList.remove(selected);
-
-		if (cell.length > 0) {
-			output = '<div class="' + cell + '"></div>';
-			$cell.classList.add(selected);
-		}
-
-		$cell.innerHTML = output;
-	});
-};
-
-// TODO: move to grid component
-TicTacToe.prototype.renderWinnerSequence = function(seq) {
-	var self = this;
-	var div;
-
-	seq.forEach(function(ind) {
-		div = qs('div', self.$tableCell[ind]);
-		div.classList.add('is-winner-cell');
-	});
-};
-
-// TODO: move to score/turn component
-TicTacToe.prototype.renderTurn = function(turn) {
-	if (turn === 'o') {
-		this.$playerTurn[0].classList.remove('is-selected');
-		this.$playerTurn[1].classList.add('is-selected');
-	} else {
-		this.$playerTurn[1].classList.remove('is-selected');
-		this.$playerTurn[0].classList.add('is-selected');
-	}
-};
-
-// TODO: move to score/turn component
-TicTacToe.prototype.renderScore = function(score) {
-	this.$playerScore[0].innerHTML = score.x;
-	this.$playerScore[1].innerHTML = score.o;
-};
 
 TicTacToe.prototype.restartGame = function() {
 	var self = this;
@@ -174,18 +129,6 @@ TicTacToe.prototype.wait = function(ms) {
 		}, ms);
 	});
 };
-
-// Helpers
-// --------------
-function qs(selector, context) {
-	context = context || document;
-	return context.querySelector(selector);
-}
-
-function qsa(selector, context) {
-	context = context || document;
-	return context.querySelectorAll(selector);
-}
 
 module.exports = new TicTacToe();
 

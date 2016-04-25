@@ -28,9 +28,12 @@ var target = {
     css_output : 'public/css/*.css',                                // where to put minified css
     sass_folder : 'css/scss',                                // where to put minified css
     js_concat_src : [                                   // all js files that should be concatinated
+        'src/utils.js',
         'src/events.js',
         'src/store.js',
         'src/winner.js',
+        'src/score-view.js',
+        'src/grid-view.js',
         'src/game.js',
         'src/initializer.js'
     ],

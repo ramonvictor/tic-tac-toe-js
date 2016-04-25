@@ -2,13 +2,9 @@ document.addEventListener('DOMContentLoaded', function() {
 	var location = window.location;
 	var hash = window.location.hash;
 
-	var generateId = function() {
-		return Math.floor((1 + Math.random()) * 0x10000)
-					.toString(16).substring(1);
-	};
-
 	if (!hash || hash.length < 2) {
-		location.href = location.href + '#' + generateId();
+		location.href = location.href + '#' +
+			(((1+Math.random())*0x10000)|0).toString(16).substring(1);
 	}
 
 	var T = require('./game');

@@ -48,11 +48,32 @@
 	__webpack_require__(2);
 	__webpack_require__(3);
 	__webpack_require__(4);
-	module.exports = __webpack_require__(5);
+	__webpack_require__(5);
+	__webpack_require__(6);
+	__webpack_require__(7);
+	module.exports = __webpack_require__(8);
 
 
 /***/ },
 /* 1 */
+/***/ function(module, exports) {
+
+	var utils = {};
+
+	utils.qs = function(selector, context) {
+		context = context || document;
+		return context.querySelector(selector);
+	};
+
+	utils.qsa = function(selector, context) {
+		context = context || document;
+		return context.querySelectorAll(selector);
+	};
+
+	module.exports = utils;
+
+/***/ },
+/* 2 */
 /***/ function(module, exports) {
 
 	function Events() {}
@@ -73,13 +94,13 @@
 
 
 /***/ },
-/* 2 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Store
 	// --------------
 	function Store() {
-		this.events = __webpack_require__(1);
+		this.events = __webpack_require__(2);
 
 		this.prevState = {};
 		this.state = {};
@@ -127,8 +148,13 @@
 
 	function updateGrid(grid, action) {
 		return grid.map(function(c, i) {
-			return (action.index === i || action.type === 'RESTART_GAME') ?
-				updateCell(c, action) : c;
+			var output = c;
+
+			if (action.index === i || action.type === 'RESTART_GAME') {
+				output = updateCell(c, action);
+			}
+
+			return output;
 		});
 	}
 
@@ -197,7 +223,7 @@
 
 
 /***/ },
-/* 3 */
+/* 4 */
 /***/ function(module, exports) {
 
 	function Winner() {
@@ -275,26 +301,111 @@
 
 
 /***/ },
-/* 4 */
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var utils = __webpack_require__(1);
+
+	function ScoreView(players) {
+		this.$playerTurn = utils.qsa('.js-player-turn', players);
+		this.$playerScore = utils.qsa('.js-player-score', players);
+	}
+
+	ScoreView.prototype.render = function(data, what) {
+		this[what](data);
+	};
+
+
+	ScoreView.prototype.score = function(score) {
+		this.$playerScore[0].innerHTML = score.x;
+		this.$playerScore[1].innerHTML = score.o;
+	};
+
+	ScoreView.prototype.turn = function(turn) {
+		if (turn === 'o') {
+			this.$playerTurn[0].classList.remove('is-selected');
+			this.$playerTurn[1].classList.add('is-selected');
+		} else {
+			this.$playerTurn[1].classList.remove('is-selected');
+			this.$playerTurn[0].classList.add('is-selected');
+		}
+	};
+
+	module.exports = function(players) {
+		return new ScoreView(players);
+	};
+
+/***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var utils = __webpack_require__(1);
+
+	function GridView(table) {
+		this.$tableCell = utils.qsa('.js-cell', table);
+	}
+
+	GridView.prototype.render = function(data, what) {
+		this[what](data);
+	};
+
+	GridView.prototype.grid = function(grid) {
+		var self = this;
+		var selected = 'is-filled';
+
+		grid.forEach(function(cell, index) {
+			var output = '';
+			var $cell = self.$tableCell[index];
+
+			$cell.classList.remove(selected);
+
+			if (cell.length > 0) {
+				output = '<div class="' + cell + '"></div>';
+				$cell.classList.add(selected);
+			}
+
+			$cell.innerHTML = output;
+		});
+	};
+
+	GridView.prototype.winner = function(seq) {
+		var self = this;
+		var div;
+
+		seq.forEach(function(ind) {
+			div = utils.qs('div', self.$tableCell[ind]);
+			div.classList.add('is-winner-cell');
+		});
+	};
+
+	module.exports = function(table) {
+		return new GridView(table);
+	};
+
+
+/***/ },
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Application
 	// --------------
+	var utils = __webpack_require__(1);
+
 	function TicTacToe() {
 		this.socket = io();
-		this.store = __webpack_require__(2);
-		this.events = __webpack_require__(1);
-		this.winner = __webpack_require__(3);
+		this.store = __webpack_require__(3);
+		this.events = __webpack_require__(2);
+		this.winner = __webpack_require__(4);
 	}
 
 	TicTacToe.prototype.init = function(config) {
-		this.gameId = config.gameId;
-		this.$table = qs(config.gridElement);
-		this.$tableCell = qsa('.js-cell', this.$table);
+		this.$table = utils.qs(config.gridElement);
+		this.$players = utils.qs(config.playersElement);
 
-		this.$players = qs(config.playersElement);
-		this.$playerTurn = qsa('.js-player-turn', this.$players);
-		this.$playerScore = qsa('.js-player-score', this.$players);
+		this.gameId = config.gameId;
+
+		this.scoreView = __webpack_require__(5)(this.$players);
+		this.gridView = __webpack_require__(6)(this.$table);
 
 		this.eventListeners();
 	};
@@ -372,69 +483,22 @@
 
 	TicTacToe.prototype.render = function(prevState, state) {
 		if (prevState.grid !== state.grid) {
-			this.renderGrid(state.grid);
+			this.gridView.render(state.grid, 'grid');
 		}
 
 		if (prevState.turn !== state.turn) {
-			this.renderTurn(state.turn);
+			this.scoreView.render(state.turn, 'turn');
 		}
 
 		if (prevState.score !== state.score) {
-			this.renderScore(state.score);
+			this.scoreView.render(state.score, 'score');
 		}
 
 		if (prevState.winnerSequence !== state.winnerSequence) {
-			this.renderWinnerSequence(state.winnerSequence);
+			this.gridView.render(state.winnerSequence, 'winner');
 		}
 	};
 
-	// TODO: move to grid component
-	TicTacToe.prototype.renderGrid = function(grid) {
-		var self = this;
-		var selected = 'is-filled';
-
-		grid.forEach(function(cell, index) {
-			var output = '';
-			var $cell = self.$tableCell[index];
-
-			$cell.classList.remove(selected);
-
-			if (cell.length > 0) {
-				output = '<div class="' + cell + '"></div>';
-				$cell.classList.add(selected);
-			}
-
-			$cell.innerHTML = output;
-		});
-	};
-
-	// TODO: move to grid component
-	TicTacToe.prototype.renderWinnerSequence = function(seq) {
-		var self = this;
-		var div;
-
-		seq.forEach(function(ind) {
-			div = qs('div', self.$tableCell[ind]);
-			div.classList.add('is-winner-cell');
-		});
-	};
-
-	// TODO: move to score/turn component
-	TicTacToe.prototype.renderTurn = function(turn) {
-		if (turn === 'o') {
-			this.$playerTurn[0].classList.remove('is-selected');
-			this.$playerTurn[1].classList.add('is-selected');
-		} else {
-			this.$playerTurn[1].classList.remove('is-selected');
-			this.$playerTurn[0].classList.add('is-selected');
-		}
-	};
-
-	// TODO: move to score/turn component
-	TicTacToe.prototype.renderScore = function(score) {
-		this.$playerScore[0].innerHTML = score.x;
-		this.$playerScore[1].innerHTML = score.o;
-	};
 
 	TicTacToe.prototype.restartGame = function() {
 		var self = this;
@@ -455,40 +519,24 @@
 		});
 	};
 
-	// Helpers
-	// --------------
-	function qs(selector, context) {
-		context = context || document;
-		return context.querySelector(selector);
-	}
-
-	function qsa(selector, context) {
-		context = context || document;
-		return context.querySelectorAll(selector);
-	}
-
 	module.exports = new TicTacToe();
 
 
 
 /***/ },
-/* 5 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	document.addEventListener('DOMContentLoaded', function() {
 		var location = window.location;
 		var hash = window.location.hash;
 
-		var generateId = function() {
-			return Math.floor((1 + Math.random()) * 0x10000)
-						.toString(16).substring(1);
-		};
-
 		if (!hash || hash.length < 2) {
-			location.href = location.href + '#' + generateId();
+			location.href = location.href + '#' +
+				(((1+Math.random())*0x10000)|0).toString(16).substring(1);
 		}
 
-		var T = __webpack_require__(4);
+		var T = __webpack_require__(7);
 
 		T.init({
 			gridElement: '.js-table',
