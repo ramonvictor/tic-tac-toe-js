@@ -42,22 +42,31 @@ TicTacToe.prototype.onCellClick = function(event) {
 	var target = event.target;
 	var classes = target.classList;
 	var index = target.dataset.index;
+	var state = store.getState();
 
-	if (!classes.contains('js-cell') || classes.contains('is-filled')) {
+	if (!classes.contains('js-cell') || classes.contains('is-filled') ||
+		(state.player.length && state.turn !== state.player)) {
 		return;
 	}
 
 	// Dispatch update cell action
-	this.updateCell(index);
+	this.updateCell(state, index);
 };
 
-TicTacToe.prototype.updateCell = function(index) {
-	var state = store.getState();
+TicTacToe.prototype.updateCell = function(state, index) {
 	var action = {
 		type: state.turn === 'x' ? 'SET_X' : 'SET_O',
 		index: parseInt(index, 10),
 		gameId: this.gameId
 	};
+
+	// Pick player side
+	if (!state.player.length) {
+		store.dispatch({
+			type: 'PICK_SIDE',
+			side: state.turn
+		});
+	}
 
 	// Dispatch action
 	store.dispatch(action);
@@ -70,7 +79,6 @@ TicTacToe.prototype.onStoreUpdate = function(event) {
 	// Render
 	this.render(data.prevState, data.state);
 
-	// Check winner
 	// TODO: move this to proper place
 	this.checkWinner(data.prevState, data.state);
 };

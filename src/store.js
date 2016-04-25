@@ -2,10 +2,10 @@ var events = require('./events');
 
 function Store() {
 	this.prevState = {};
+
 	this.state = {};
-
+	this.state.player = '';
 	this.state.grid = ['', '', '', '', '', '', '', '', ''];
-
 	this.state.turn = 'x';
 	this.state.score = {
 		x: 0,
@@ -41,7 +41,8 @@ Store.prototype.update = function(state, action) {
 		turn: updateTurn(state.turn, action),
 		score: updateScore(state.score, action),
 		winnerSequence: updateWinnerSequence(state.winnerSequence, action),
-		turnCounter: updateCounter(state.turnCounter, action)
+		turnCounter: updateCounter(state.turnCounter, action),
+		player: updatePlayer(state.player, action)
 	};
 };
 
@@ -115,6 +116,15 @@ function updateCounter(turnCounter, action) {
 			return 0;
 		default:
 			return turnCounter;
+	}
+}
+
+function updatePlayer(player, action) {
+	switch (action.type) {
+		case 'PICK_SIDE':
+			return action.side;
+		default:
+			return player;
 	}
 }
 

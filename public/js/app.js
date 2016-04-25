@@ -110,10 +110,10 @@
 
 	function Store() {
 		this.prevState = {};
+
 		this.state = {};
-
+		this.state.player = '';
 		this.state.grid = ['', '', '', '', '', '', '', '', ''];
-
 		this.state.turn = 'x';
 		this.state.score = {
 			x: 0,
@@ -149,7 +149,8 @@
 			turn: updateTurn(state.turn, action),
 			score: updateScore(state.score, action),
 			winnerSequence: updateWinnerSequence(state.winnerSequence, action),
-			turnCounter: updateCounter(state.turnCounter, action)
+			turnCounter: updateCounter(state.turnCounter, action),
+			player: updatePlayer(state.player, action)
 		};
 	};
 
@@ -223,6 +224,15 @@
 				return 0;
 			default:
 				return turnCounter;
+		}
+	}
+
+	function updatePlayer(player, action) {
+		switch (action.type) {
+			case 'PICK_SIDE':
+				return action.side;
+			default:
+				return player;
 		}
 	}
 
@@ -438,22 +448,31 @@
 		var target = event.target;
 		var classes = target.classList;
 		var index = target.dataset.index;
+		var state = store.getState();
 
-		if (!classes.contains('js-cell') || classes.contains('is-filled')) {
+		if (!classes.contains('js-cell') || classes.contains('is-filled') ||
+			(state.player.length && state.turn !== state.player)) {
 			return;
 		}
 
 		// Dispatch update cell action
-		this.updateCell(index);
+		this.updateCell(state, index);
 	};
 
-	TicTacToe.prototype.updateCell = function(index) {
-		var state = store.getState();
+	TicTacToe.prototype.updateCell = function(state, index) {
 		var action = {
 			type: state.turn === 'x' ? 'SET_X' : 'SET_O',
 			index: parseInt(index, 10),
 			gameId: this.gameId
 		};
+
+		// Pick player side
+		if (!state.player.length) {
+			store.dispatch({
+				type: 'PICK_SIDE',
+				side: state.turn
+			});
+		}
 
 		// Dispatch action
 		store.dispatch(action);
@@ -466,7 +485,6 @@
 		// Render
 		this.render(data.prevState, data.state);
 
-		// Check winner
 		// TODO: move this to proper place
 		this.checkWinner(data.prevState, data.state);
 	};
