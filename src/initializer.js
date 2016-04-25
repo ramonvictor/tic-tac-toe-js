@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	T.init({
 		gridElement: '.js-table',
 		playersElement: '.js-players-display',
-		gameId: hash.replace('#', '')
+		gameId: window.location.hash.replace('#', '')
 	});
 
 }, false);

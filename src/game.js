@@ -26,14 +26,16 @@ TicTacToe.prototype.init = function(config) {
 TicTacToe.prototype.eventListeners = function() {
 	this.$table.addEventListener('click', this.onCellClick.bind(this));
 	events.on('store:update', this.onStoreUpdate.bind(this));
+	socket.on('connect', this.onSocketConnect.bind(this));
 	socket.on('dispatch', this.onSocketDispatch.bind(this));
 };
 
-// TODO: fix this with socket channel
+TicTacToe.prototype.onSocketConnect = function(data) {
+	socket.emit('room', this.gameId);
+};
+
 TicTacToe.prototype.onSocketDispatch = function(data) {
-	if (data.gameId === this.gameId) {
-		store.dispatch(data);
-	}
+	store.dispatch(data);
 };
 
 TicTacToe.prototype.onCellClick = function(event) {

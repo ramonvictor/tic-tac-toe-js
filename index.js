@@ -11,8 +11,13 @@ app.get('/', function(req, res) {
 });
 
 io.on('connection', function(socket) {
+	socket.on('room', function(room) {
+		socket.join(room);
+	});
+
 	socket.on('dispatch', function(data) {
-		socket.broadcast.emit('dispatch', data);
+		socket.broadcast.to(data.gameId)
+			.emit('dispatch', data);
 	});
 });
 
