@@ -67,3 +67,6 @@ Winner.prototype.hasWinner = function(grid, lastTurn) {
 	return false;
 };
 
+module.exports = new Winner();
+
+

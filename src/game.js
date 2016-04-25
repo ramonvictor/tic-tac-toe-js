@@ -2,9 +2,9 @@
 // --------------
 function TicTacToe() {
 	this.socket = io();
-	this.store = new Store();
-	this.events = new Events();
-	this.winner = new Winner();
+	this.store = require('./store');
+	this.events = require('./events');
+	this.winner = require('./winner');
 }
 
 TicTacToe.prototype.init = function(config) {
@@ -186,3 +186,6 @@ function qsa(selector, context) {
 	context = context || document;
 	return context.querySelectorAll(selector);
 }
+
+module.exports = new TicTacToe();
+

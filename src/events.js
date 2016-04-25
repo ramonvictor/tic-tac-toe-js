@@ -11,3 +11,5 @@ Events.prototype.trigger = function(name, data) {
 
 	document.dispatchEvent(event);
 };
+
+module.exports = new Events();

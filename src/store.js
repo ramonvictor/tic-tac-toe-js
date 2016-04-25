@@ -1,7 +1,7 @@
 // Store
 // --------------
 function Store() {
-	this.events = new Events();
+	this.events = require('./events');
 
 	this.prevState = {};
 	this.state = {};
@@ -114,3 +114,5 @@ function updateCounter(turnCounter, action) {
 			return turnCounter;
 	}
 }
+
+module.exports = new Store();

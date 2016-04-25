@@ -15,6 +15,7 @@ var minifycss = require('gulp-minify-css');             // minify the css files
 var browserSync = require('browser-sync').create();     // inject code to all devices
 var autoprefixer = require('gulp-autoprefixer');        // sets missing browserprefixes
 var nodemon = require('gulp-nodemon');
+var webpack = require('webpack-stream');
 var port = process.env.PORT || 3000;
 
 /*******************************************************************************
@@ -26,23 +27,12 @@ var target = {
     css_dest : 'public/css',                                // where to put minified css
     css_output : 'public/css/*.css',                                // where to put minified css
     sass_folder : 'css/scss',                                // where to put minified css
-    js_lint_src : [                                     // all js that should be linted
-        'src/events.js',
-        'src/store.js',
-        'src/winner.js',
-        'src/index.js'
-    ],
-    js_uglify_src : [                                   // all js files that should not be concatinated
-        'src/events.js',
-        'src/store.js',
-        'src/winner.js',
-        'src/index.js'
-    ],
     js_concat_src : [                                   // all js files that should be concatinated
         'src/events.js',
         'src/store.js',
         'src/winner.js',
-        'src/index.js'
+        'src/game.js',
+        'src/initializer.js'
     ],
     js_dest : 'public/js',                                  // where to put minified js
     css_img : 'public/css/i'
@@ -78,16 +68,9 @@ gulp.task('compass', function() {
 
 // lint my custom js
 gulp.task('js-lint', function() {
-    gulp.src(target.js_lint_src)                        // get the files
+    gulp.src(target.js_concat_src)                        // get the files
         .pipe(jshint())                                 // lint the files
         .pipe(jshint.reporter(stylish))                 // present the results in a beautiful way
-});
-
-// concat files
-gulp.task('js-concat', function() {
-    gulp.src(target.js_concat_src)
-        .pipe(concat('index.min.js'))
-        .pipe(gulp.dest(target.js_dest));
 });
 
 /*******************************************************************************
@@ -108,14 +91,20 @@ gulp.task('nodemon', function(cb) {
     }).once('start', cb);
 });
 
+gulp.task('webpack', function() {
+  return gulp.src(target.js_concat_src)
+    .pipe(webpack({ output: { filename: 'app.js' }}))
+    .pipe(gulp.dest(target.js_dest));
+});
+
 /*******************************************************************************
 1. GULP TASKS
 *******************************************************************************/
 gulp.task('watch', function() {
     gulp.watch(target.sass_src, ['compass']).on('change', browserSync.reload);
     gulp.watch(target.css_output).on('change', browserSync.reload);
-    gulp.watch(target.js_lint_src, ['js-lint']).on('change', browserSync.reload);
-    gulp.watch(target.js_uglify_src, ['js-concat']).on('change', browserSync.reload);
+    gulp.watch(target.js_concat_src, ['js-lint']).on('change', browserSync.reload);
+    gulp.watch(target.js_concat_src, ['webpack']).on('change', browserSync.reload);
 });
 
-gulp.task('default', ['compass', 'js-lint', 'js-concat', 'nodemon', 'browser-sync', 'watch']);
+gulp.task('default', ['compass', 'js-lint', 'webpack', 'nodemon', 'browser-sync', 'watch']);
