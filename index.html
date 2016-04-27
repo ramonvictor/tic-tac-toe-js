@@ -41,21 +41,21 @@
 		</ol>
 
 		<h2 class="sub-header">How does it look like on Tic-Tac-Toe.js?</h2>
-		<strong class="highlight">One single store</strong>
+		<strong class="highlight">1. One single store</strong>
 		<p class="mb-shorter">Everything that can affect UI is saved on <a href="https://github.com/ramonvictor/tic-tac-toe-js/blob/master/src/store.js">store.js</a>. Check how the structure looks like:</p>
 		<div class="snippet-wrapper">
 			<script src="https://gist.github.com/ramonvictor/a293e3bb1462a259ef93623beca86bad.js"></script>
 			<p class="ta-right fz-small see-source"><a href="https://github.com/ramonvictor/tic-tac-toe-js/blob/master/src/store.js">Check full source code.</a></p>
 		</div>
 
-		<strong class="highlight"><a href="https://github.com/ramonvictor/tic-tac-toe-js/blob/master/src/game.js">Game.js</a> dispatches actions whenever needed:</strong>
+		<strong class="highlight">2. <a href="https://github.com/ramonvictor/tic-tac-toe-js/blob/master/src/game.js">Game.js</a> dispatches actions whenever needed:</strong>
 		<p class="mb-shorter">Let's check what happens, for instance, when user clicks on the table grid:</p>
 		<div class="snippet-wrapper">
 			<script src="https://gist.github.com/ramonvictor/25c7dbcb159ab5e07fd3516c2096658a.js"></script>
 			<p class="ta-right fz-small see-source"><a href="https://github.com/ramonvictor/tic-tac-toe-js/blob/master/src/game.js">Check full source code.</a></p>
 		</div>
 
-		<strong class="highlight">Reducers receive actions and return new state</strong>
+		<strong class="highlight">3. Reducers receive actions and return new state</strong>
 		<p class="mb-shorter">It's also possible to combine multiple reducers.</p>
 		<div class="snippet-wrapper">
 			<script src="https://gist.github.com/ramonvictor/87d12ce9b59db477fcb6bdbb931b9b86.js"></script>
