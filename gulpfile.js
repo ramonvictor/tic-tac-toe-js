@@ -34,6 +34,7 @@ var target = {
         'src/winner.js',
         'src/score-view.js',
         'src/grid-view.js',
+        'src/fiveicon-view.js',
         'src/game.js',
         'src/initializer.js'
     ],

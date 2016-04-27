@@ -3,6 +3,7 @@
 var utils = require('./utils');
 var scoreView = require('./score-view');
 var gridView = require('./grid-view');
+var fiveiconView = require('./fiveicon-view');
 var store = require('./store');
 var events = require('./events');
 var socket = io();
@@ -12,6 +13,7 @@ function TicTacToe() {
 }
 
 TicTacToe.prototype.init = function(config) {
+	this.$head = document.head || utils.qs('head');
 	this.$table = utils.qs(config.gridElement);
 	this.$players = utils.qs(config.playersElement);
 
@@ -19,6 +21,7 @@ TicTacToe.prototype.init = function(config) {
 
 	this.scoreView = scoreView(this.$players);
 	this.gridView = gridView(this.$table);
+	this.fiveiconView = fiveiconView(this.$head);
 
 	this.eventListeners();
 };
@@ -86,6 +89,7 @@ TicTacToe.prototype.render = function(prevState, state) {
 
 	if (prevState.turn !== state.turn) {
 		this.scoreView.render('turn', state.turn);
+		this.fiveiconView.render(state.turn);
 	}
 
 	if (prevState.score !== state.score) {

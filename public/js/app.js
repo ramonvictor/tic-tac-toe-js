@@ -51,7 +51,8 @@
 	__webpack_require__(5);
 	__webpack_require__(6);
 	__webpack_require__(7);
-	module.exports = __webpack_require__(8);
+	__webpack_require__(8);
+	module.exports = __webpack_require__(9);
 
 
 /***/ },
@@ -402,6 +403,35 @@
 
 /***/ },
 /* 7 */
+/***/ function(module, exports) {
+
+	function FaviconView(head) {
+		this.$head = head;
+	}
+
+	FaviconView.prototype.render = function(turn) {
+		var link = document.createElement('link');
+		var oldLink = document.getElementById('favicon');
+		var src = (turn === 'x') ? 'favicon.ico' : 'favicon-o.ico';
+
+		link.id = 'favicon';
+		link.rel = 'shortcut icon';
+		link.href = src;
+
+		if (oldLink) {
+			this.$head.removeChild(oldLink);
+		}
+
+		this.$head.appendChild(link);
+	};
+
+	module.exports = function(head) {
+		return new FaviconView(head);
+	};
+
+
+/***/ },
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Application
@@ -409,6 +439,7 @@
 	var utils = __webpack_require__(1);
 	var scoreView = __webpack_require__(5);
 	var gridView = __webpack_require__(6);
+	var fiveiconView = __webpack_require__(7);
 	var store = __webpack_require__(3);
 	var events = __webpack_require__(2);
 	var socket = io();
@@ -418,6 +449,7 @@
 	}
 
 	TicTacToe.prototype.init = function(config) {
+		this.$head = document.head || utils.qs('head');
 		this.$table = utils.qs(config.gridElement);
 		this.$players = utils.qs(config.playersElement);
 
@@ -425,6 +457,7 @@
 
 		this.scoreView = scoreView(this.$players);
 		this.gridView = gridView(this.$table);
+		this.fiveiconView = fiveiconView(this.$head);
 
 		this.eventListeners();
 	};
@@ -458,7 +491,6 @@
 			return;
 		}
 
-		// Dispatch update cell action
 		this.updateCell(state, index);
 	};
 
@@ -469,7 +501,6 @@
 			gameId: this.gameId
 		};
 
-		// Pick player side
 		if (!state.player.length) {
 			store.dispatch({
 				type: 'PICK_SIDE',
@@ -477,7 +508,6 @@
 			});
 		}
 
-		// Dispatch action
 		store.dispatch(action);
 		socket.emit('dispatch', action);
 	};
@@ -495,6 +525,7 @@
 
 		if (prevState.turn !== state.turn) {
 			this.scoreView.render('turn', state.turn);
+			this.fiveiconView.render(state.turn);
 		}
 
 		if (prevState.score !== state.score) {
@@ -544,7 +575,7 @@
 
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	document.addEventListener('DOMContentLoaded', function() {
@@ -556,7 +587,7 @@
 				(((1+Math.random())*0x10000)|0).toString(16).substring(1);
 		}
 
-		var T = __webpack_require__(7);
+		var T = __webpack_require__(8);
 
 		T.init({
 			gridElement: '.js-table',
