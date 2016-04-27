@@ -96,7 +96,7 @@ TicTacToe.prototype.render = function(prevState, state) {
 		this.scoreView.render('score', state.score);
 	}
 
-	if (prevState.winnerSequence !== state.winnerSequence)  {
+	if (prevState.winnerSequence !== state.winnerSequence) {
 		this.gridView.render('winner', state.winnerSequence);
 	}
 

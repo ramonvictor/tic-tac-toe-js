@@ -4,7 +4,7 @@ function Store() {
 	this.prevState = {};
 	this.state = {};
 
-	this.state = this.update(this.state, {});
+	this.state = this.update(this.state, { type: 'INIT' });
 }
 
 Store.prototype.getState = function(action) {

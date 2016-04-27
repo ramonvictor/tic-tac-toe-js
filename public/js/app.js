@@ -113,7 +113,7 @@
 		this.prevState = {};
 		this.state = {};
 
-		this.state = this.update(this.state, {});
+		this.state = this.update(this.state, { type: 'INIT' });
 	}
 
 	Store.prototype.getState = function(action) {
@@ -532,7 +532,7 @@
 			this.scoreView.render('score', state.score);
 		}
 
-		if (prevState.winnerSequence !== state.winnerSequence)  {
+		if (prevState.winnerSequence !== state.winnerSequence) {
 			this.gridView.render('winner', state.winnerSequence);
 		}
 
@@ -579,11 +579,10 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	document.addEventListener('DOMContentLoaded', function() {
-		var w = window;
-		var hash = w.location.hash;
+		var hash = window.location.hash;
 
 		if (!hash || hash.length < 2) {
-			w.location.href = w.location.href + '#' +
+			window.location.href = window.location.href + '#' +
 				(((1+Math.random())*0x10000)|0).toString(16).substring(1);
 		}
 
@@ -592,7 +591,7 @@
 		T.init({
 			gridElement: '.js-table',
 			playersElement: '.js-players-display',
-			gameId: w.location.hash.replace('#', '')
+			gameId: window.location.hash.replace('#', '')
 		});
 
 	}, false);
