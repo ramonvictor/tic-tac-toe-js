@@ -51,11 +51,18 @@ TicTacToe.prototype.onCellClick = function(event) {
 	var state = store.getState();
 
 	if (!classes.contains('js-cell') || classes.contains('is-filled') ||
-		(state.player.length && state.turn !== state.player)) {
+		this.shouldPreventClick(state)) {
 		return;
 	}
 
 	this.updateCell(state, index);
+};
+
+TicTacToe.prototype.shouldPreventClick = function(state) {
+	var isNotMyTurn = (state.player.length && state.turn !== state.player);
+	var isGameFinished = (state.winnerSequence.length > 0);
+
+	return isNotMyTurn || isGameFinished;
 };
 
 TicTacToe.prototype.updateCell = function(state, index) {

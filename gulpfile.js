@@ -104,11 +104,11 @@ gulp.task('webpack', function() {
 /*******************************************************************************
 1. GULP TASKS
 *******************************************************************************/
-gulp.task('watch', function() {
-    gulp.watch(target.sass_src, ['compass']).on('change', browserSync.reload);
-    gulp.watch(target.css_output).on('change', browserSync.reload);
-    gulp.watch(target.js_concat_src, ['js-lint']).on('change', browserSync.reload);
-    gulp.watch(target.js_concat_src, ['webpack']).on('change', browserSync.reload);
-});
+// gulp.task('watch', function() {
+//     gulp.watch(target.sass_src, ['compass']).on('change', browserSync.reload);
+//     gulp.watch(target.css_output).on('change', browserSync.reload);
+//     gulp.watch(target.js_concat_src, ['js-lint']).on('change', browserSync.reload);
+//     gulp.watch(target.js_concat_src, ['webpack']).on('change', browserSync.reload);
+// });
 
-gulp.task('default', ['compass', 'js-lint', 'webpack', 'nodemon', 'browser-sync', 'watch']);
+gulp.task('default', ['compass', 'js-lint', 'webpack', 'nodemon']);

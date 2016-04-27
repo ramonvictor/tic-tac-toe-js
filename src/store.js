@@ -70,6 +70,8 @@ function updateTurn(turn, action) {
 			return 'o';
 		case 'SET_O':
 			return 'x';
+		case 'SHOW_WINNER':
+			return action.winner;
 		case 'RESTART_GAME':
 			return 'x';
 		default:
