@@ -22,6 +22,8 @@ body{
 	a {
 		color: #96a8c1;
 		text-decoration: none;
+		transition: all .2s linear;
+		-webkit-tap-highlight-color: rgba(0,0,0,0);
 
 		&:hover{
 			color: #fff;
@@ -41,6 +43,7 @@ body{
 }
 
 .room-id{
+	font-size: 16px;
 	background: #324156;
 	border: none;
 	border-radius: 3px;
@@ -49,9 +52,16 @@ body{
 	text-align: center;
 	color: #96A8C1;
 	outline: none;
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+	transition: all .2s linear;
+
+	&:focus{
+		background: darken(#324156, 3%);
+	}
 }
 
 .refresh-icon{
+	font-size: 16px;
 	color: #96A8C1;
 	padding: 9px 14px;
 	text-align: center;
@@ -60,9 +70,12 @@ body{
 	cursor: pointer;
 	background: none;
 	outline: none;
+	transition: all .2s linear;
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
 
 	&:hover{
-		color: #fff;
+		color: #aebdd3;
+		border-color: #aebdd3;
 	}
 }
 
@@ -265,6 +278,7 @@ body{
 
 // Mobile
 // --------
+
 @media only screen and (max-device-width: 499px) {
 	.container {
 		width: 100%;
