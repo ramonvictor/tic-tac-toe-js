@@ -13,10 +13,10 @@
 	<link rel="apple-touch-icon" sizes="114x114" href="tic-tac-toe-js-114x114.png" />
 	<link rel="apple-touch-icon" sizes="144x144" href="tic-tac-toe-js-144x144.png" />
 
-	<!-- <meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="mobile-web-app-capable" content="yes"> -->
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-title" content="Tic-Tac-Toe.js">
-	<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-180x180.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="icons/tic-tac-toe-js-icon-180.png">
 	<link rel="apple-touch-icon" sizes="152x152" href="icons/tic-tac-toe-js-icon-152.png">
 	<link rel="apple-touch-icon" sizes="144x144" href="icons/tic-tac-toe-js-icon-144.png">
 	<link rel="apple-touch-icon" sizes="120x120" href="icons/tic-tac-toe-js-icon-120.png">
@@ -59,7 +59,11 @@
 		</tbody>
 	</table>
 	<footer class="footer">
-		<p>Made with &#10084; by <a href="https://github.com/ramonvictor">@ramonvictor</a>. Fork it on <a href="https://github.com/ramonvictor/tic-tac-toe-js">@github</a>.</p>
+		<div class="group">
+			<input type="text" id="room-id" class="room-id">
+			<a href="#" id="refresh-game" class="refresh-icon" title="Refresh game!">&#8635;</a>
+		</div>
+		<p>Made with &#9829; by <a href="https://github.com/ramonvictor">@ramonvictor</a>. Fork it on <a href="https://github.com/ramonvictor/tic-tac-toe-js">@github</a>.</p>
 	</footer>
 </div>
 <script src="/socket.io/socket.io.js"></script>

@@ -453,7 +453,7 @@
 		this.$table = utils.qs(config.gridElement);
 		this.$players = utils.qs(config.playersElement);
 
-		this.gameId = config.gameId;
+		this.room = config.room;
 
 		this.scoreView = scoreView(this.$players);
 		this.gridView = gridView(this.$table);
@@ -473,7 +473,7 @@
 	};
 
 	TicTacToe.prototype.onSocketConnect = function(data) {
-		socket.emit('room', this.gameId);
+		socket.emit('room', this.room);
 	};
 
 	TicTacToe.prototype.onSocketDispatch = function(data) {
@@ -498,7 +498,7 @@
 		var action = {
 			type: state.turn === 'x' ? 'SET_X' : 'SET_O',
 			index: parseInt(index, 10),
-			gameId: this.gameId
+			room: this.room
 		};
 
 		if (!state.player.length) {
@@ -587,12 +587,23 @@
 		}
 
 		var T = __webpack_require__(8);
+		var room = window.location.hash;
+		var refresh = document.getElementById('refresh-game');
+		var roomID = document.getElementById('room-id');
 
 		T.init({
 			gridElement: '.js-table',
 			playersElement: '.js-players-display',
-			gameId: window.location.hash.replace('#', '')
+			room: room.replace('#', '')
 		});
+
+		// Set footer information
+		roomID.value = room;
+		refresh.addEventListener('click', function(event) {
+			event.preventDefault();
+			document.location.reload(false);
+		}, false);
+
 
 	}, false);
 

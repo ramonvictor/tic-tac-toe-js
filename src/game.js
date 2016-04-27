@@ -17,7 +17,7 @@ TicTacToe.prototype.init = function(config) {
 	this.$table = utils.qs(config.gridElement);
 	this.$players = utils.qs(config.playersElement);
 
-	this.gameId = config.gameId;
+	this.room = config.room;
 
 	this.scoreView = scoreView(this.$players);
 	this.gridView = gridView(this.$table);
@@ -37,7 +37,7 @@ TicTacToe.prototype.eventListeners = function() {
 };
 
 TicTacToe.prototype.onSocketConnect = function(data) {
-	socket.emit('room', this.gameId);
+	socket.emit('room', this.room);
 };
 
 TicTacToe.prototype.onSocketDispatch = function(data) {
@@ -62,7 +62,7 @@ TicTacToe.prototype.updateCell = function(state, index) {
 	var action = {
 		type: state.turn === 'x' ? 'SET_X' : 'SET_O',
 		index: parseInt(index, 10),
-		gameId: this.gameId
+		room: this.room
 	};
 
 	if (!state.player.length) {

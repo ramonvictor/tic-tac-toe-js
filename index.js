@@ -16,7 +16,7 @@ io.on('connection', function(socket) {
 	});
 
 	socket.on('dispatch', function(data) {
-		socket.broadcast.to(data.gameId)
+		socket.broadcast.to(data.room)
 			.emit('dispatch', data);
 	});
 });

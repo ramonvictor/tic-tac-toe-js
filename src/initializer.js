@@ -7,11 +7,22 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	var T = require('./game');
+	var room = window.location.hash;
+	var refresh = document.getElementById('refresh-game');
+	var roomID = document.getElementById('room-id');
 
 	T.init({
 		gridElement: '.js-table',
 		playersElement: '.js-players-display',
-		gameId: window.location.hash.replace('#', '')
+		room: room.replace('#', '')
 	});
+
+	// Set footer information
+	roomID.value = room;
+	refresh.addEventListener('click', function(event) {
+		event.preventDefault();
+		document.location.reload(false);
+	}, false);
+
 
 }, false);

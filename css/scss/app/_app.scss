@@ -15,18 +15,48 @@ body{
 }
 
 .footer{
-	padding: 35px 0;
+	padding: 30px 0;
 	color: #96a8c1;
 	text-align: center;
 
 	a {
-		color: #c4d0e2;
+		color: #96a8c1;
 		text-decoration: none;
 
 		&:hover{
 			color: #fff;
 		}
 	}
+}
+
+.group {
+	zoom: 1;
+	&:before, &:after {
+	  content: "";
+	  display: table;
+	}
+	&:after {
+		clear: both;
+	}
+}
+
+.room-id{
+	background: #324156;
+	border: none;
+	border-radius: 3px;
+	margin-bottom: 25px;
+	padding: 11px;
+	text-align: center;
+	color: #96A8C1;
+	outline: none;
+}
+
+.refresh-icon{
+	width: 30px;
+	padding: 10px 12px;
+	text-align: center;
+	border: 1px solid #324156;
+	border-radius: 3px;
 }
 
 .tic-tac-toe-table{
