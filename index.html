@@ -10,7 +10,7 @@
 	<meta name="description" content="Tic-Tac-Toe game implemented in redux pattern without any javascript framework">
 	<meta name="author" content="Ramon Victor">
 	<meta name="viewport" content="width=device-width">
-	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="shortcut icon" href="favicon.ico" />
 
 	<meta property="og:image" content="img/tic-tac-toe-js-cover.png" />
 
@@ -20,10 +20,64 @@
 </head>
 <body>
 <div class="container">
+	<!-- TODO: add link to demo. -->
+	<!-- TODO: github start cta. -->
 	<img src="img/tic-tac-toe-js-mobile.png" width="250" alt="Tic-Tac-Toe.js mobile mockup" class="iphone-mockup">
-	<h1 class="main-header">Tic-Tac-Toe.js: redux pattern in plain javascript</h1>
-	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vitae illum vel molestiae quis dolores reprehenderit aspernatur aut, ab magnam nesciunt unde, voluptatum impedit laborum necessitatibus eligendi enim pariatur repellendus, molestias!</p>
-	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Necessitatibus quam autem perferendis incidunt totam commodi distinctio doloribus fugiat soluta architecto qui reiciendis, consequuntur facere quod veritatis. Expedita iure, tenetur nisi.</p>
+	<div class="content">
+		<h1 class="main-header">Tic-Tac-Toe.js: redux pattern in plain javascript</h1>
+		<p>There's this thing going on in the Front-End Developement community where everybody wants to re-write their applications to use React. Sorry to disapoint, but that's not the case here. At work I mostly use vanilla javascript, therefore it is more beneficial for me learning the concepts rather than the frameworks themselves.</p>
+		<p>With the amazing help and guidance of <a href="https://github.com/ricardobeat">@ricardobeat</a>, I've managed to build this <a href="https://rocky-ocean-52527.herokuapp.com/">Tic-Tac-Toe</a> game using Redux principles exclusively with vanilla javascript. That's it, no React, no jQuery, no micro-library, it doesn't rely on anything else. It's just plain js. What? Is it really possible? Yes, and that's what I wanna share in this post. Let's get into the details.</p>
+		<h2 class="sub-header">The key principles</h2>
+		<p>Redux pattern is mainly based on <a href="http://redux.js.org/docs/introduction/ThreePrinciples.html">three fundamental principles</a>:</p>
+		<ol>
+			<li><strong class="highlight">Single source of truth</strong>
+				<p>The state of your whole application is stored in an object tree within a single store.</p>
+			</li>
+			<li><strong class="highlight">State is read-only</strong>
+				<p>The only way to mutate the state is to emit an action, an object describing what happened.</p></li>
+			<li><strong class="highlight">Changes are made with pure functions</strong>
+				<p>To specify how the state tree is transformed by actions, you write pure reducers.</p>
+			</li>
+		</ol>
+
+		<h2 class="sub-header">How does it look like on Tic-Tac-Toe.js?</h2>
+		<strong class="highlight">One single store</strong>
+		<p class="mb-shorter">Everything that can affect UI is saved on <a href="https://github.com/ramonvictor/tic-tac-toe-js/blob/master/src/store.js">store.js</a>. Check how the structure looks like:</p>
+		<div class="snippet-wrapper">
+			<script src="https://gist.github.com/ramonvictor/a293e3bb1462a259ef93623beca86bad.js"></script>
+			<p class="ta-right fz-small see-source"><a href="https://github.com/ramonvictor/tic-tac-toe-js/blob/master/src/store.js">Check full source code.</a></p>
+		</div>
+
+		<strong class="highlight"><a href="https://github.com/ramonvictor/tic-tac-toe-js/blob/master/src/game.js">Game.js</a> dispatches actions whenever needed:</strong>
+		<p class="mb-shorter">Let's check what happens, for instance, when user clicks on the table grid:</p>
+		<div class="snippet-wrapper">
+			<script src="https://gist.github.com/ramonvictor/25c7dbcb159ab5e07fd3516c2096658a.js"></script>
+			<p class="ta-right fz-small see-source"><a href="https://github.com/ramonvictor/tic-tac-toe-js/blob/master/src/game.js">Check full source code.</a></p>
+		</div>
+
+		<strong class="highlight">Reducers receive actions and return new state</strong>
+		<p class="mb-shorter">It's also possible to combine multiple reducers.</p>
+		<div class="snippet-wrapper">
+			<script src="https://gist.github.com/ramonvictor/87d12ce9b59db477fcb6bdbb931b9b86.js"></script>
+			<p class="ta-right fz-small see-source"><a href="https://github.com/ramonvictor/tic-tac-toe-js/blob/master/src/store.js#L29">Check full source code.</a></p>
+		</div>
+
+		<h2 class="sub-header">Strict unidirectional data flow</h2>
+		<p>TODO!!!</p>
+		<p><a href="http://redux.js.org/docs/basics/DataFlow.html">See more on official documentation.</a></p>
+
+		<h2 class="sub-header">How about the back-end?</h2>
+		<p>This was one of the coolest things about Redux. Since everything is based on dispatch actions, which are by definition simple JSON objects, it was quite easy to make Tic-Tac-Toe.js a multiplayer game.</p>
+		<p>Node.js was obviously my choice. With just a few lines of code I could make a broadcast service on the backend. It also handles room ids and everything. Works like a charm! :)</p>
+		<div class="snippet-wrapper">
+			<script src="https://gist.github.com/ramonvictor/4696208b06f954782e9111043cefbe90.js"></script>
+			<p class="ta-right fz-small see-source"><a href="https://github.com/ramonvictor/tic-tac-toe-js/blob/master/index.js">Check full source code.</a></p>
+		</div>
+
+		<h2 class="sub-header">That's all!</h2>
+		<p>TODO!!!</p>
+	</div>
 </div>
+<!-- TODO: add fork on github link. -->
 </body>
 </html>

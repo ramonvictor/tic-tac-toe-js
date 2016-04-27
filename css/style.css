@@ -4,17 +4,64 @@
 }
 
 body {
-	color: #95a8c1;
+	color: #a4b4cb;
 	background: #38485f;
-	font-family: 'Roboto Condensed', sans-serif;
+	font-size: 21px;
+	font-family: 'Lusitana', serif;
 }
 
-p {
-	font-family: 'Lusitana', serif;
+p,
+li {
 	line-height: 160%;
 	margin-bottom: 1.5em;
 	font-weight: 400;
-	font-size: 19px;
+}
+
+.mb-shorter{
+	margin-bottom: 1em;
+}
+
+.ta-right{
+	text-align: right;
+}
+
+.fz-small{
+	font-size: 14px;
+}
+
+.see-source{
+	margin-bottom: 0;
+	position: relative;
+	top: -5px;
+}
+
+ol {
+	list-style-type: decimal;
+	list-style-position: outside;
+	padding-left: 20px;
+}
+
+li {
+	padding-left: 10px;
+	margin-bottom: .2em;
+}
+
+a {
+	color: #5bd1ab;
+	text-decoration: none;
+	transition: all .2s linear;
+}
+
+.content{
+	overflow: hidden;
+}
+
+.highlight{
+	color: #fff;
+}
+
+a:hover{
+	color: #fff;
 }
 
 .container {
@@ -22,12 +69,22 @@ p {
 	margin: 50px auto;
 }
 
-.main-header{
+.main-header,
+.sub-header{
 	color: #fff;
 	font-size: 40px;
 	margin-bottom: 1em;
 	line-height: 135%;
 	font-family: 'Raleway', sans-serif;
+}
+
+.sub-header{
+	font-size: 30px;
+	margin-bottom: .7em;
+}
+
+.snippet-wrapper{
+	margin-bottom: 40px;
 }
 
 .iphone-mockup{
