@@ -52,11 +52,18 @@ body{
 }
 
 .refresh-icon{
-	width: 30px;
-	padding: 10px 12px;
+	color: #96A8C1;
+	padding: 9px 14px;
 	text-align: center;
 	border: 1px solid #324156;
 	border-radius: 3px;
+	cursor: pointer;
+	background: none;
+	outline: none;
+
+	&:hover{
+		color: #fff;
+	}
 }
 
 .tic-tac-toe-table{

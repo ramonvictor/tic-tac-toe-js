@@ -8,8 +8,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	var T = require('./game');
 	var room = window.location.hash;
-	var refresh = document.getElementById('refresh-game');
-	var roomID = document.getElementById('room-id');
+	var refreshForm = document.getElementById('refresh-game-form');
+	var roomField = document.getElementById('room-id');
 
 	T.init({
 		gridElement: '.js-table',
@@ -17,10 +17,13 @@ document.addEventListener('DOMContentLoaded', function() {
 		room: room.replace('#', '')
 	});
 
-	// Set footer information
-	roomID.value = room;
-	refresh.addEventListener('click', function(event) {
+	// Display room id
+	roomField.value = room;
+
+	// Force refresh
+	refreshForm.addEventListener('submit', function(event) {
 		event.preventDefault();
+		window.location.hash = roomField.value.replace('#', '');
 		document.location.reload(false);
 	}, false);
 
