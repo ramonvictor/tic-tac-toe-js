@@ -2,18 +2,9 @@ var events = require('./events');
 
 function Store() {
 	this.prevState = {};
-
 	this.state = {};
-	this.state.player = '';
-	this.state.grid = ['', '', '', '', '', '', '', '', ''];
-	this.state.turn = 'x';
-	this.state.score = {
-		x: 0,
-		o: 0
-	};
 
-	this.state.winnerSequence = [];
-	this.state.turnCounter = 0;
+	this.state = this.update(this.state, {});
 }
 
 Store.prototype.getState = function(action) {
@@ -47,6 +38,8 @@ Store.prototype.update = function(state, action) {
 };
 
 function updateGrid(grid, action) {
+	grid = grid || ['', '', '', '', '', '', '', '', ''];
+
 	return grid.map(function(c, i) {
 		var output = c;
 
@@ -80,7 +73,7 @@ function updateTurn(turn, action) {
 		case 'RESTART_GAME':
 			return 'x';
 		default:
-			return turn;
+			return turn || 'x';
 	}
 }
 
@@ -91,7 +84,7 @@ function updateScore(score, action) {
 			newScore[action.winner] = score[action.winner] + 1;
 			return Object.assign({}, score, newScore);
 		default:
-			return score;
+			return score || { x: 0, o: 0 };
 	}
 }
 
@@ -102,7 +95,7 @@ function updateWinnerSequence(winnerSequence, action) {
 		case 'RESTART_GAME':
 			return [];
 		default:
-			return winnerSequence;
+			return winnerSequence || [];
 	}
 }
 
@@ -115,7 +108,7 @@ function updateCounter(turnCounter, action) {
 		case 'RESTART_GAME':
 			return 0;
 		default:
-			return turnCounter;
+			return turnCounter || 0;
 	}
 }
 
@@ -124,7 +117,7 @@ function updatePlayer(player, action) {
 		case 'PICK_SIDE':
 			return action.side;
 		default:
-			return player;
+			return player || '';
 	}
 }
 

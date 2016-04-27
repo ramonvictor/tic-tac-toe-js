@@ -5,7 +5,7 @@ function ScoreView(players) {
 	this.$playerScore = utils.qsa('.js-player-score', players);
 }
 
-ScoreView.prototype.render = function(data, what) {
+ScoreView.prototype.render = function(what, data) {
 	this[what](data);
 };
 

@@ -4,7 +4,7 @@ function GridView(table) {
 	this.$tableCell = utils.qsa('.js-cell', table);
 }
 
-GridView.prototype.render = function(data, what) {
+GridView.prototype.render = function(what, data) {
 	this[what](data);
 };
 

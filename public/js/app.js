@@ -110,18 +110,9 @@
 
 	function Store() {
 		this.prevState = {};
-
 		this.state = {};
-		this.state.player = '';
-		this.state.grid = ['', '', '', '', '', '', '', '', ''];
-		this.state.turn = 'x';
-		this.state.score = {
-			x: 0,
-			o: 0
-		};
 
-		this.state.winnerSequence = [];
-		this.state.turnCounter = 0;
+		this.state = this.update(this.state, {});
 	}
 
 	Store.prototype.getState = function(action) {
@@ -155,6 +146,8 @@
 	};
 
 	function updateGrid(grid, action) {
+		grid = grid || ['', '', '', '', '', '', '', '', ''];
+
 		return grid.map(function(c, i) {
 			var output = c;
 
@@ -188,7 +181,7 @@
 			case 'RESTART_GAME':
 				return 'x';
 			default:
-				return turn;
+				return turn || 'x';
 		}
 	}
 
@@ -199,7 +192,7 @@
 				newScore[action.winner] = score[action.winner] + 1;
 				return Object.assign({}, score, newScore);
 			default:
-				return score;
+				return score || { x: 0, o: 0 };
 		}
 	}
 
@@ -210,7 +203,7 @@
 			case 'RESTART_GAME':
 				return [];
 			default:
-				return winnerSequence;
+				return winnerSequence || [];
 		}
 	}
 
@@ -223,7 +216,7 @@
 			case 'RESTART_GAME':
 				return 0;
 			default:
-				return turnCounter;
+				return turnCounter || 0;
 		}
 	}
 
@@ -232,7 +225,7 @@
 			case 'PICK_SIDE':
 				return action.side;
 			default:
-				return player;
+				return player || '';
 		}
 	}
 
@@ -328,7 +321,7 @@
 		this.$playerScore = utils.qsa('.js-player-score', players);
 	}
 
-	ScoreView.prototype.render = function(data, what) {
+	ScoreView.prototype.render = function(what, data) {
 		this[what](data);
 	};
 
@@ -362,7 +355,7 @@
 		this.$tableCell = utils.qsa('.js-cell', table);
 	}
 
-	GridView.prototype.render = function(data, what) {
+	GridView.prototype.render = function(what, data) {
 		this[what](data);
 	};
 
@@ -511,19 +504,19 @@
 
 	TicTacToe.prototype.render = function(prevState, state) {
 		if (prevState.grid !== state.grid) {
-			this.gridView.render(state.grid, 'grid');
+			this.gridView.render('grid', state.grid);
 		}
 
 		if (prevState.turn !== state.turn) {
-			this.scoreView.render(state.turn, 'turn');
+			this.scoreView.render('turn', state.turn);
 		}
 
 		if (prevState.score !== state.score) {
-			this.scoreView.render(state.score, 'score');
+			this.scoreView.render('score', state.score);
 		}
 
 		if (prevState.winnerSequence !== state.winnerSequence) {
-			this.gridView.render(state.winnerSequence, 'winner');
+			this.gridView.render('winner', state.winnerSequence);
 		}
 	};
 

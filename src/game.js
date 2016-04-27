@@ -105,19 +105,19 @@ TicTacToe.prototype.showWinner = function(lastTurn, winnerSeq) {
 
 TicTacToe.prototype.render = function(prevState, state) {
 	if (prevState.grid !== state.grid) {
-		this.gridView.render(state.grid, 'grid');
+		this.gridView.render('grid', state.grid);
 	}
 
 	if (prevState.turn !== state.turn) {
-		this.scoreView.render(state.turn, 'turn');
+		this.scoreView.render('turn', state.turn);
 	}
 
 	if (prevState.score !== state.score) {
-		this.scoreView.render(state.score, 'score');
+		this.scoreView.render('score', state.score);
 	}
 
 	if (prevState.winnerSequence !== state.winnerSequence) {
-		this.gridView.render(state.winnerSequence, 'winner');
+		this.gridView.render('winner', state.winnerSequence);
 	}
 };
 
