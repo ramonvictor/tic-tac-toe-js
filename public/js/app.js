@@ -236,12 +236,20 @@
 /* 4 */
 /***/ function(module, exports) {
 
-	function Winner() {
+	function Winner(grid, lastTurn) {
 		this.dimensions = [this.getRows(), this.getColumns(), this.getDiagonals()];
 	}
 
-	Winner.prototype.check = function(prevState, state) {
-		return this.hasWinner(state.grid, prevState.turn);
+	Winner.prototype.check = function(grid, lastTurn) {
+		var self = this;
+
+		return new Promise(function(resolve, reject) {
+			var winnerSeq = self.hasWinner(grid, lastTurn);
+
+			if (winnerSeq.length > 0) {
+				resolve(winnerSeq);
+			}
+		});
 	};
 
 	Winner.prototype.getRows = function() {
@@ -302,12 +310,11 @@
 			dIndex++;
 		}
 
-		return false;
+		return [];
 	};
 
+
 	module.exports = new Winner();
-
-
 
 
 /***/ },
@@ -424,7 +431,10 @@
 
 	TicTacToe.prototype.eventListeners = function() {
 		this.$table.addEventListener('click', this.onCellClick.bind(this));
+
 		events.on('store:update', this.onStoreUpdate.bind(this));
+		events.on('store:update', this.checkWinner.bind(this));
+
 		socket.on('connect', this.onSocketConnect.bind(this));
 		socket.on('dispatch', this.onSocketDispatch.bind(this));
 	};
@@ -475,31 +485,7 @@
 	TicTacToe.prototype.onStoreUpdate = function(event) {
 		var data = event.detail;
 
-		// Render
 		this.render(data.prevState, data.state);
-
-		// TODO: move this to proper place
-		this.checkWinner(data.prevState, data.state);
-	};
-
-	TicTacToe.prototype.checkWinner = function(prevState, state) {
-		var winnerSeq = this.winner.check(prevState, state);
-
-		if (Array.isArray(winnerSeq)) {
-			this.showWinner(prevState.turn, winnerSeq);
-		} else if (state.turnCounter === 9) {
-			this.restartGame();
-		}
-	};
-
-	TicTacToe.prototype.showWinner = function(lastTurn, winnerSeq) {
-		store.dispatch({
-			type: 'SHOW_WINNER',
-			winner: lastTurn,
-			sequence: winnerSeq
-		});
-
-		this.restartGame();
 	};
 
 	TicTacToe.prototype.render = function(prevState, state) {
@@ -515,11 +501,36 @@
 			this.scoreView.render('score', state.score);
 		}
 
-		if (prevState.winnerSequence !== state.winnerSequence) {
+		if (prevState.winnerSequence !== state.winnerSequence)  {
 			this.gridView.render('winner', state.winnerSequence);
+		}
+
+		if (!prevState.winnerSequence.length && state.turnCounter === 9) {
+			this.restartGame();
 		}
 	};
 
+	TicTacToe.prototype.checkWinner = function(event) {
+		var self = this;
+		var data = event.detail;
+		var lastTurn = data.prevState.turn;
+
+		this.winner
+			.check(data.state.grid, lastTurn)
+			.then(function(winnerSeq) {
+				self.showWinner(lastTurn, winnerSeq);
+			});
+	};
+
+	TicTacToe.prototype.showWinner = function(lastTurn, sequence) {
+		store.dispatch({
+			type: 'SHOW_WINNER',
+			winner: lastTurn,
+			sequence: sequence
+		});
+
+		this.restartGame();
+	};
 
 	TicTacToe.prototype.restartGame = function() {
 		utils.wait(1500).then(function() {
@@ -532,17 +543,16 @@
 	module.exports = new TicTacToe();
 
 
-
 /***/ },
 /* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	document.addEventListener('DOMContentLoaded', function() {
-		var location = window.location;
-		var hash = window.location.hash;
+		var w = window;
+		var hash = w.location.hash;
 
 		if (!hash || hash.length < 2) {
-			location.href = location.href + '#' +
+			w.location.href = w.location.href + '#' +
 				(((1+Math.random())*0x10000)|0).toString(16).substring(1);
 		}
 
@@ -551,7 +561,7 @@
 		T.init({
 			gridElement: '.js-table',
 			playersElement: '.js-players-display',
-			gameId: window.location.hash.replace('#', '')
+			gameId: w.location.hash.replace('#', '')
 		});
 
 	}, false);

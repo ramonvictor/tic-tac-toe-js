@@ -1,9 +1,17 @@
-function Winner() {
+function Winner(grid, lastTurn) {
 	this.dimensions = [this.getRows(), this.getColumns(), this.getDiagonals()];
 }
 
-Winner.prototype.check = function(prevState, state) {
-	return this.hasWinner(state.grid, prevState.turn);
+Winner.prototype.check = function(grid, lastTurn) {
+	var self = this;
+
+	return new Promise(function(resolve, reject) {
+		var winnerSeq = self.hasWinner(grid, lastTurn);
+
+		if (winnerSeq.length > 0) {
+			resolve(winnerSeq);
+		}
+	});
 };
 
 Winner.prototype.getRows = function() {
@@ -64,9 +72,8 @@ Winner.prototype.hasWinner = function(grid, lastTurn) {
 		dIndex++;
 	}
 
-	return false;
+	return [];
 };
 
+
 module.exports = new Winner();
-
-
