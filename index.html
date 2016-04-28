@@ -85,10 +85,10 @@
 		<p>The important thing here is that we stick with the correct data flow. Which brings me to next topic.</p>
 
 		<h2 class="sub-header">Strict unidirectional data flow</h2>
-		<p>Maybe you haven't noticed, but on previous examples the data flow is ways unidirectional. View (game.js) dispatch actions, store.js receives and process them with reducers which later triggers <code>'store:update'</code> so finally we can render the UI updates.</p>
+		<p>Maybe you haven't noticed, but on previous examples the data flow is always unidirectional. View (game.js) dispatch actions, store.js receives and process them with reducers which later triggers <code>'store:update'</code> so finally we can render the UI updates.</p>
 		<p>You can read more about Data Flow on <a href="http://redux.js.org/docs/basics/DataFlow.html">redux.js.org.</a></p>
 
-		<h2 class="sub-header">How about the back-end?</h2>
+		<h2 class="sub-header">Going multiplayer</h2>
 		<p>This was one of the coolest things about Redux. Since everything is based on dispatching actions, which are by definition simple JSON objects, it was quite easy to make Tic-Tac-Toe.js a multiplayer game.</p>
 		<p>Node.js was obviously my choice. With just a few lines of code I could make a broadcast service on the backend. It also handles room ids and everything. Works like a charm! :)</p>
 		<div class="snippet-wrapper">
@@ -109,17 +109,18 @@
 				*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
 				*/
 				var disqus_config = function() {
-					this.page.url = 'http://ramonvictor.github.io/tic-tac-toe-js/';  // Replace PAGE_URL with your page's canonical URL variable
+					this.page.url = '//ramonvictor.github.io/tic-tac-toe-js/';  // Replace PAGE_URL with your page's canonical URL variable
 					this.page.identifier = 'github.io/tic-tac-toe-js/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
 				};
 
-				(function() {  // REQUIRED CONFIGURATION VARIABLE: EDIT THE SHORTNAME BELOW
+				(function() {
 					var d = document, s = d.createElement('script');
 					s.src = '//ramonvictor.disqus.com/embed.js';  // IMPORTANT: Replace EXAMPLE with your forum shortname!
 					s.setAttribute('data-timestamp', +new Date());
 					(d.head || d.body).appendChild(s);
 				})();
 			</script>
+			<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
 		</div>
 	</div>
 </div>
