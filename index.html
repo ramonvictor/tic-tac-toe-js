@@ -85,18 +85,38 @@
 		<p>The important thing here is that we stick with the correct data flow. Which brings me to next topic.</p>
 
 		<h2 class="sub-header">Strict unidirectional data flow</h2>
-		<p>Maybe you haven't noticed, but on previous examples the data flow is always unidirectional. View (game.js) dispatch actions, store.js receives and process them with reducers which later triggers <code>'store:update'</code> so finally we can render the UI updates.</p>
+		<p>Maybe you haven't noticed, but on previous examples the data flow is always unidirectional. Game.js - the view - dispatch actions, store.js receives and process them with reducers which later triggers <code>'store:update'</code> so finally we can render the UI updates.</p>
 		<p>You can read more about Data Flow on <a href="http://redux.js.org/docs/basics/DataFlow.html">redux.js.org.</a></p>
 
 		<h2 class="sub-header">Going multiplayer</h2>
-		<p>One thing missing here is that Tic-Tac-Toe is by definition a multiplayer game. So, after having the game working properly on the client-side I needed to find a way to update the game in two browsers simutaneously.</p>
+		<p>Ok, we have everything working on the client-side. But how is Tic-Tac-Toe connecting two players?</p>
 
-		<p>This was one of the coolest things about Redux. Since everything is based on dispatching actions, which are by definition simple JSON objects, it was quite easy to make Tic-Tac-Toe.js a multiplayer game.</p>
-		<p>Node.js was obviously my choice. With just a few lines of code I could make a broadcast service on the backend. It also handles room ids and everything. Works like a charm! :)</p>
+		<p>Implementing the back-end in NodeJS + Socket.io was really simple and that's one of the coolest things about Redux. Because everything is based on actions, which are by definition simple JSON objects, so the only requirement on the Back-end whould be receiving the action and dispatching it to other players connected in the same room/game id.</p>
+
+		<strong class="highlight">The front-end side:</strong>
+		<p>Everything starts on the client-side. When page loads I generate a random ID, which will then be handed to the server.</p>
+		<div class="snippet-wrapper">
+			<script src="https://gist.github.com/ramonvictor/a18a87b77234a007d7b85ed02d5e7af3.js"></script>
+			<p class="ta-right fz-small see-source"><a href="https://github.com/ramonvictor/tic-tac-toe-js/blob/master/src/game.js">Check full source code.</a></p>
+		</div>
+
+		<strong class="highlight">The back-end side:</strong>
+		<p>Pretty simple. It's all about registering the room and broadcasting the actions:</p>
 		<div class="snippet-wrapper">
 			<script src="https://gist.github.com/ramonvictor/4696208b06f954782e9111043cefbe90.js"></script>
 			<p class="ta-right fz-small see-source"><a href="https://github.com/ramonvictor/tic-tac-toe-js/blob/master/index.js">Check full source code.</a></p>
 		</div>
+
+		<h2 class="sub-header">Design and usability</h2>
+		<p>The game was designed to work on different resolutions. On desktop version the fiveicon updates acording to the player turn, check that out when you start playing. On mobile it's possible to save the app on home screen, there's a special logo icon for that.</p>
+		<p><strong class="highlight">"Ok, so how can I play the game?"</strong></p>
+		<ol>
+			<li>Open the <a href="https://rocky-ocean-52527.herokuapp.com/">demo</a> on any device (except old browsers).</li>
+			<li>Copy the id that appers bellow the grid and send to your friend</li>
+			<li>Your friend should paste the id in the same field and click on the refresh icon located right after it.</li>
+		</ol>
+		<p><strong class="highlight">Is there an easier way to connect in the same room?</strong></p>
+		<p>If you are using iOS you can share your browser url <a href="http://www.howtogeek.com/208143/use-airdrop-to-wirelessly-send-content-between-nearby-iphones-ipads-and-macs/">using AirDrop</a>. That way your friend would load the same room/game id by default.</p>
 
 		<h2 class="sub-header">Learnings</h2>
 		<p>Redux has proven to be very easy to debug and fix issues for me. You have one single entity that represents the state of your application and the only way you can change it is by dispatching actions. I was also surprised how fast it was to integrate with a NodeJs server and make it broadcat certain actions to the front-end.</p>
@@ -104,10 +124,25 @@
 
 		<div class="comments-wrapper">
 			<h3 class="sub-header-3">About me</h3>
-			<p>I enjoy the challenge of making people's lives easier by translating my design thoughts into code. Front-End Engineer @ <a href="www.booking.com">http://Booking.com</a>.</p>
-			<p>Find me on: <a href="https://twitter.com/ramonvictor">Twitter</a>, <a href="https://github.com/ramonvictor">Github</a> or <a href="http://br.linkedin.com/in/ramonvictor">LinkedIn</a></p>
+			<div class="gravatar-wrapper">
+				<img src="http://www.gravatar.com/avatar/ee2b083c898c1bd3a7c9f209945e93ef.jpg?s=150" alt="Ramon Victor profile picture">
+			</div>
+			<div class="about-content">
+				<p>I enjoy the challenge of making people's lives easier by translating my design thoughts into code. Front-End Engineer @ <a href="www.booking.com">http://Booking.com</a>.</p>
+				<p>Find me on: <a href="https://twitter.com/ramonvictor">Twitter</a>, <a href="https://github.com/ramonvictor">Github</a> or <a href="http://br.linkedin.com/in/ramonvictor">LinkedIn</a>.</p>
+			</div>
 		</div>
 	</div>
 </div>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-49815710-2', 'auto');
+  ga('send', 'pageview');
+
+</script>
 </body>
 </html>

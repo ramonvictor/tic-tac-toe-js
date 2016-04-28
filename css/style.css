@@ -52,6 +52,7 @@ ol {
 	list-style-type: decimal;
 	list-style-position: outside;
 	padding-left: 20px;
+	margin-bottom: 30px;
 }
 
 li {
@@ -164,8 +165,34 @@ a:hover{
 	border: 1px solid #303E52;
 }
 
+.comments-wrapper{
+	border-top: 1px solid #2C374A;
+	padding-top: 30px;
+}
+
+.gravatar-wrapper{
+	width: 100px;
+	height: 100px;
+	float: left;
+	margin-right: 20px;
+	border-radius: 50%;
+	overflow: hidden;
+}
+
+.about-content{
+	overflow: hidden;
+}
+
+.about-content p {
+	font-size: 17px;
+}
+
+.gravatar-wrapper img{
+	width: 100%;
+	height: auto;
+}
 
 .snippet-wrapper{
-	margin-bottom: 40px;
+	margin-bottom: 25px;
 }
 
