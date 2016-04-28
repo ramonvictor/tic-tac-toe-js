@@ -233,3 +233,13 @@ a:hover{
 		margin: 0 30px;
 	}
 }
+
+@media only screen and (max-device-width: 414px) {
+	.gravatar-wrapper{
+		float: none;
+		margin: 0 auto 20px;
+	}
+	.comments-wrapper{
+		text-align: center;
+	}
+}
