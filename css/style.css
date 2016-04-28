@@ -25,6 +25,10 @@ li {
 	text-align: right;
 }
 
+.ta-center {
+	text-align: center;
+}
+
 .fz-small{
 	font-size: 14px;
 }
@@ -33,6 +37,15 @@ li {
 	margin-bottom: 0;
 	position: relative;
 	top: -5px;
+}
+
+code {
+	font-family: consolas, monospace;
+	background: #A4B4CB;
+	padding: 6px 6px 4px;
+	border-radius: 3px;
+	font-size: 15px;
+	color: #38485F;
 }
 
 ol {
@@ -53,7 +66,7 @@ a {
 }
 
 .content{
-	overflow: hidden;
+	width: 640px;
 }
 
 .highlight{
@@ -65,12 +78,23 @@ a:hover{
 }
 
 .container {
-	width: 920px;
+	width: 960px;
 	margin: 50px auto;
 }
 
+.sidebar {
+	width: 250px;
+	float: right;
+	margin-left: 60px;
+}
+
+.iphone-mockup-wrapper{
+	padding-top: 30px;
+}
+
 .main-header,
-.sub-header{
+.sub-header,
+.sub-header-3{
 	color: #fff;
 	font-size: 40px;
 	margin-bottom: 1em;
@@ -83,11 +107,65 @@ a:hover{
 	margin-bottom: .7em;
 }
 
+.sub-header-3 {
+	font-size: 24px;
+	margin-bottom: .7em;
+}
+
+.main-header{
+	position: relative;
+	padding-left: 75px;
+}
+
+.github-btn {
+	padding: 10px;
+	height: 27px;
+	border-radius: 5px;
+	background: #273342;
+	border-left: 1px solid #141a22;
+	border-top: 1px solid #141a22;
+	position: relative;
+}
+
+.check-on-github {
+	font-size: 14px;
+	color: #fff;
+	background: #2e926f;
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 46px;
+	line-height: 46px;
+	padding: 0 15px;
+	border-radius: 0 5px 5px 0;
+	transition: all .2s linear;
+}
+
+.github-stargazers{
+	padding-top: 3px;
+}
+
+.check-on-github:hover{
+	background: #5bd1ab;
+}
+
+.main-header:before{
+	position: absolute;
+	left: -50px;
+	top: 0;
+	content: '';
+	display: block;
+	width: 100px;
+	height: 100px;
+	background: url(../img/tic-tac-toe-js-icon-152.png) no-repeat;
+	background-size: 100px;
+	border-radius: 20px;
+	box-shadow: 3px 3px 0 0 #36455A;
+	border: 1px solid #303E52;
+}
+
+
 .snippet-wrapper{
 	margin-bottom: 40px;
 }
 
-.iphone-mockup{
-	float: right;
-	margin-left: 60px;
-}
