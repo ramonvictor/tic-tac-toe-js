@@ -38,10 +38,10 @@
 	</div>
 	<div class="content">
 		<h1 class="main-header">Tic-Tac-Toe.js: redux pattern in plain javascript</h1>
-		<p>There's this thing going on in the Front-End Developement community where everybody wants to re-write their applications to use React. Sorry to disapoint, but that's not the case here. At work I mostly use vanilla javascript, therefore it is more beneficial for me learning the concepts rather than the frameworks themselves.</p>
-		<p>With the amazing help and guidance of <a href="https://github.com/ricardobeat">@ricardobeat</a>, I've managed to build this <a href="https://rocky-ocean-52527.herokuapp.com/">Tic-Tac-Toe</a> game using Redux principles with vanilla javascript. No React, no jQuery, no micro-library, it doesn't rely on anything else. It's just plain JS. Isn't it great? I wanna share in this post how it was possible. Let's get into the details.</p>
+		<p>There's this thing going on in the Front-End Developement community where everybody wants to re-write their applications to use React. Sorry to disappoint, but that's not the case here. At work I mostly use vanilla javascript, therefore it is more more beneficial for me to learn the concepts rather than the frameworks themselves.</p>
+		<p>With the amazing help and guidance of <a href="https://github.com/ricardobeat">@ricardobeat</a>, I've managed to build this <a href="https://rocky-ocean-52527.herokuapp.com/">Tic-Tac-Toe</a> game using Redux principles with vanilla javascript. No React, no jQuery, no micro-library, it doesn't rely on anything else. It's just plain JS. Isn't it great? In this post I'd like to share the approach that made this possible. Let's get into the details.</p>
 		<h2 class="sub-header">The key principles</h2>
-		<p>Redux pattern is mainly based on <a href="http://redux.js.org/docs/introduction/ThreePrinciples.html">three fundamental principles</a>:</p>
+		<p>The Redux pattern is mainly based on <a href="http://redux.js.org/docs/introduction/ThreePrinciples.html">three fundamental principles</a>:</p>
 		<ol>
 			<li><strong class="highlight">Single source of truth</strong>
 				<p>The state of your whole application is stored in an object tree within a single store.</p>
@@ -53,16 +53,16 @@
 			</li>
 		</ol>
 
-		<h2 class="sub-header">How does it look like on Tic-Tac-Toe.js?</h2>
+		<h2 class="sub-header">How does it look on Tic-Tac-Toe.js?</h2>
 		<strong class="highlight">1. One single store</strong>
-		<p class="mb-shorter">Everything that can affect UI is saved on <a href="https://github.com/ramonvictor/tic-tac-toe-js/blob/master/src/store.js">store.js</a>. Check how the structure looks like:</p>
+		<p class="mb-shorter">Everything that can affect UI is saved on <a href="https://github.com/ramonvictor/tic-tac-toe-js/blob/master/src/store.js">store.js</a>. This is what the store looks like:</p>
 		<div class="snippet-wrapper">
 			<script src="https://gist.github.com/ramonvictor/a293e3bb1462a259ef93623beca86bad.js"></script>
 			<p class="ta-right fz-small see-source"><a href="https://github.com/ramonvictor/tic-tac-toe-js/blob/master/src/store.js">Check full source code.</a></p>
 		</div>
 
 		<strong class="highlight">2. <a href="https://github.com/ramonvictor/tic-tac-toe-js/blob/master/src/game.js">Game.js</a> dispatches actions whenever needed:</strong>
-		<p class="mb-shorter">Let's check what happens, for instance, when user clicks on the table grid:</p>
+		<p class="mb-shorter">Let's see what happens, for instance, when user clicks on the table grid:</p>
 		<div class="snippet-wrapper">
 			<script src="https://gist.github.com/ramonvictor/25c7dbcb159ab5e07fd3516c2096658a.js"></script>
 			<p class="ta-right fz-small see-source"><a href="https://github.com/ramonvictor/tic-tac-toe-js/blob/master/src/game.js">Check full source code.</a></p>
@@ -76,50 +76,50 @@
 		</div>
 
 		<strong class="highlight">4. Render UI when store gets updated</strong>
-		<p class="mb-shorter">It's pretty straightforward. Every time store gets updated it emits an event so that the aplication can render the UI accordingly.</p>
+		<p class="mb-shorter">It's pretty straightforward. Every time the store gets updated it notifies the subscribers so they can update the UI accordingly.</p>
 		<div class="snippet-wrapper">
 			<script src="https://gist.github.com/ramonvictor/e20894711a0524a6ce43cc4c2344dbbd.js"></script>
 			<p class="ta-right fz-small see-source"><a href="https://github.com/ramonvictor/tic-tac-toe-js/blob/master/src/game.js#L92">Check full source code.</a></p>
 		</div>
-		<p>In the above case I'm doing it slightly different compared to <code>store.subscribe(render)</code> on <a href="http://redux.js.org/docs/basics/Store.html">Redux</a>. I'm actually triggering a global event and letting the game.js render the callback whenever necessary.</p>
+		<p>In the above case I'm doing it slightly different compared to <code>store.subscribe(render)</code> in <a href="http://redux.js.org/docs/basics/Store.html">Redux</a>. I'm actually triggering a global event and letting game.js render the callback whenever necessary.</p>
 		<p>The important thing here is that we stick with the correct data flow. Which brings me to next topic.</p>
 
 		<h2 class="sub-header">Strict unidirectional data flow</h2>
-		<p>Maybe you haven't noticed, but on previous examples the data flow is always unidirectional. Game.js - the view - dispatch actions, store.js receives and process them with reducers which later triggers <code>'store:update'</code> so finally we can render the UI updates.</p>
+		<p>Maybe you haven't noticed, but on previous examples the data flow is always unidirectional. Game.js - the view - dispatches actions, store.js receives and process them with reducers which later triggers <code>'store:update'</code> so finally we can render the UI updates.</p>
 		<p>You can read more about Data Flow on <a href="http://redux.js.org/docs/basics/DataFlow.html">redux.js.org.</a></p>
 
 		<h2 class="sub-header">Going multiplayer</h2>
 		<p>Ok, we have everything working on the client-side. But how is Tic-Tac-Toe connecting two players?</p>
 
-		<p>Implementing the back-end in NodeJS + Socket.io was really simple and that's one of the coolest things about Redux. Because everything is based on actions, which are by definition simple JSON objects, so the only requirement on the Back-end whould be receiving the action and dispatching it to other players connected in the same room/game id.</p>
+		<p>Implementing the back-end in node.js + socket.io was really simple and that's one of the coolest things about Redux. Because everything is based on actions, which are by definition simple objects, so the only requirement on the Back-end would be receiving the action and dispatching it to other players connected in the same room/game id.</p>
 
 		<strong class="highlight">The front-end side:</strong>
-		<p>Everything starts on the client-side. When page loads I generate a random ID, which will then be handed to the server.</p>
+		<p>Everything starts on the client-side. When the page loads I generate generate a random ID, which will then be handed to the server.</p>
 		<div class="snippet-wrapper">
 			<script src="https://gist.github.com/ramonvictor/a18a87b77234a007d7b85ed02d5e7af3.js"></script>
 			<p class="ta-right fz-small see-source"><a href="https://github.com/ramonvictor/tic-tac-toe-js/blob/master/src/game.js">Check full source code.</a></p>
 		</div>
 
 		<strong class="highlight">The back-end side:</strong>
-		<p>Pretty simple. It's all about registering the room and broadcasting the actions:</p>
+		<p>It's all about registering the room and broadcasting the actions:</p>
 		<div class="snippet-wrapper">
 			<script src="https://gist.github.com/ramonvictor/4696208b06f954782e9111043cefbe90.js"></script>
 			<p class="ta-right fz-small see-source"><a href="https://github.com/ramonvictor/tic-tac-toe-js/blob/master/index.js">Check full source code.</a></p>
 		</div>
 
 		<h2 class="sub-header">Design and usability</h2>
-		<p>The game was designed to work on different resolutions. On desktop version the fiveicon updates acording to the player turn, check that out when you start playing. On mobile it's possible to save the app on home screen, there's a special logo icon for that.</p>
+		<p>The game was designed to work in different resolutions. On desktop version the favicon updates acording to the player turn, check that out when you start playing. On mobile it's possible to save the app on home screen, there's a special logo icon for that.</p>
 		<p><strong class="highlight">"Ok, so how can I play the game?"</strong></p>
 		<ol>
 			<li>Open the <a href="https://rocky-ocean-52527.herokuapp.com/">demo</a> on any device (except old browsers).</li>
-			<li>Copy the id that appers bellow the grid and send to your friend</li>
+			<li>Copy the id that appears bellow the grid and send to your friend</li>
 			<li>Your friend should paste the id in the same field and click on the refresh icon located right after it.</li>
 		</ol>
 		<p><strong class="highlight">Is there an easier way to connect in the same room?</strong></p>
 		<p>If you are using iOS you can share your browser url <a href="http://www.howtogeek.com/208143/use-airdrop-to-wirelessly-send-content-between-nearby-iphones-ipads-and-macs/">using AirDrop</a>. That way your friend would load the same room/game id by default.</p>
 
 		<h2 class="sub-header">Learnings</h2>
-		<p>Redux has proven to be very easy to debug and fix issues. You have one single entity that represents the state of your application and the only way you can change it is by dispatching actions. I was also surprised how fast it was to integrate with a NodeJs server and make it broadcat certain actions to the front-end.</p>
+		<p>Redux has proven to be very easy to debug and fix issues. You have one single entity that represents the state of your application and the only way you can change it is by dispatching actions. I was also surprised how fast it was to integrate with a node.js server and make it broadcast certain actions to the front-end.</p>
 		<p>I've learned a lot of cool things working on this project and I holp you find this post useful. <a href="https://github.com/ramonvictor/tic-tac-toe-js">Check out Tic-Tac-Toe.js on github</a> and have fun! :)</p>
 
 		<div class="comments-wrapper">
