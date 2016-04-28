@@ -196,3 +196,40 @@ a:hover{
 	margin-bottom: 25px;
 }
 
+/* tablet */
+@media only screen and (max-device-width: 959px) {
+	.container{
+		width: auto;
+	}
+
+	.iphone-mockup {
+		display: none;
+	}
+
+	.sidebar {
+		float: none;
+		width: 640px;
+		margin: 0 auto 30px;
+	}
+	.content {
+		margin: 0 auto;
+	}
+}
+
+/* mobile */
+@media only screen and (max-device-width: 639px) {
+	.main-header{
+		padding: 0;
+	}
+	.main-header:before{
+		display: none;
+	}
+	.sidebar {
+		width: auto;
+		margin: 0 30px 30px;
+	}
+	.content {
+		width: auto;
+		margin: 0 30px;
+	}
+}
