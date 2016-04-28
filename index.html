@@ -38,7 +38,7 @@
 	</div>
 	<div class="content">
 		<h1 class="main-header">Tic-Tac-Toe.js: redux pattern in plain javascript</h1>
-		<p>There's this thing going on in the Front-End Developement community where everybody wants to re-write their applications to use React. Sorry to disappoint, but that's not the case here. At work I mostly use vanilla javascript, therefore it is more more beneficial for me to learn the concepts rather than the frameworks themselves.</p>
+		<p>There's this thing going on in the Front-End Developement community where everybody wants to re-write their applications to use React. Sorry to disappoint, but that's not the case here. At work I mostly use vanilla javascript, therefore it is more beneficial for me to learn the concepts rather than the frameworks themselves.</p>
 		<p>With the amazing help and guidance of <a href="https://github.com/ricardobeat">@ricardobeat</a>, I've managed to build this <a href="https://rocky-ocean-52527.herokuapp.com/">Tic-Tac-Toe</a> game using Redux principles with vanilla javascript. No React, no jQuery, no micro-library, it doesn't rely on anything else. It's just plain JS. Isn't it great? In this post I'd like to share the approach that made this possible. Let's get into the details.</p>
 		<h2 class="sub-header">The key principles</h2>
 		<p>The Redux pattern is mainly based on <a href="http://redux.js.org/docs/introduction/ThreePrinciples.html">three fundamental principles</a>:</p>
@@ -91,10 +91,10 @@
 		<h2 class="sub-header">Going multiplayer</h2>
 		<p>Ok, we have everything working on the client-side. But how is Tic-Tac-Toe connecting two players?</p>
 
-		<p>Implementing the back-end in node.js + socket.io was really simple and that's one of the coolest things about Redux. Because everything is based on actions, which are by definition simple objects, so the only requirement on the Back-end would be receiving the action and dispatching it to other players connected in the same room/game id.</p>
+		<p>Implementing the back-end in node.js + socket.io was really simple and that's one of the coolest things about Redux. Because everything is based on actions, which are by definition simple objects, the only requirement on the Back-end would be: receiving the action and dispatching it to other players connected in the same room/game id.</p>
 
 		<strong class="highlight">The front-end side:</strong>
-		<p>Everything starts on the client-side. When the page loads I generate generate a random ID, which will then be handed to the server.</p>
+		<p>Everything starts on the client-side. When the page loads I generate a random ID, which will then be handed to the server.</p>
 		<div class="snippet-wrapper">
 			<script src="https://gist.github.com/ramonvictor/a18a87b77234a007d7b85ed02d5e7af3.js"></script>
 			<p class="ta-right fz-small see-source"><a href="https://github.com/ramonvictor/tic-tac-toe-js/blob/master/src/game.js">Check full source code.</a></p>
@@ -108,7 +108,7 @@
 		</div>
 
 		<h2 class="sub-header">Design and usability</h2>
-		<p>The game was designed to work in different resolutions. On desktop version the favicon updates acording to the player turn, check that out when you start playing. On mobile it's possible to save the app on home screen, there's a special logo icon for that.</p>
+		<p>The game was designed to work in different resolutions. On desktop version the favicon updates according to the player turn, check that out when you start playing. On mobile it's possible to save the app on home screen, there's a special logo icon for that.</p>
 		<p><strong class="highlight">"Ok, so how can I play the game?"</strong></p>
 		<ol>
 			<li>Open the <a href="https://rocky-ocean-52527.herokuapp.com/">demo</a> on any device (except old browsers).</li>
