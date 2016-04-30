@@ -66,9 +66,12 @@
 		</tbody>
 	</table>
 	<footer class="footer">
+		<div id="pop-over" class="pop-over">
+			<p>Paste the room id in this field or ask your opponent to do so.</p>
+			<span class="pop-over-close">&times;</span>
+		</div>
 		<form id="refresh-game-form" class="group" action="/">
-			<input type="text" id="room-id" class="room-id">
-			<button class="refresh-icon">&#8635;</button>
+			<label for="room-id" class="room-id-label">Room id</label><input type="text" id="room-id" class="room-id">
 		</form>
 		<p>Made with &#9829; by <a href="https://github.com/ramonvictor">@ramonvictor</a>. Fork it on <a href="https://github.com/ramonvictor/tic-tac-toe-js">@github</a>.</p>
 	</footer>
@@ -83,7 +86,6 @@
 
   ga('create', 'UA-49815710-3', 'auto');
   ga('send', 'pageview');
-
 </script>
 </body>
 </html>
