@@ -17,6 +17,12 @@ li {
 	font-weight: 400;
 }
 
+.full-width-img{
+	width: 100%;
+	height: auto;
+	vertical-align: top;
+}
+
 .mb-shorter{
 	margin-bottom: 1em;
 }
