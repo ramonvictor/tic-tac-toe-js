@@ -202,19 +202,19 @@ a:hover{
 	margin-bottom: 25px;
 }
 
-.medium-link{
+.inner-comment{
 	font-size: 17px;
 	padding: 5px 0 5px 20px;
 	position: relative;
 	margin-bottom: 30px;
 }
 
-.medium-link p {
+.inner-comment p {
 	margin: 0;
 	color: #8A9AB1;
 }
 
-.medium-link:after{
+.inner-comment:after{
 	content: '';
 	display: block;
 	position: absolute;

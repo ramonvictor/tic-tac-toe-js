@@ -97,6 +97,9 @@
 			<p class="ta-right fz-small see-source"><a href="https://github.com/ramonvictor/tic-tac-toe-js/blob/master/src/game.js#L92">Check full source code.</a></p>
 		</div>
 		<p>In the above case I'm doing it slightly different compared to <code>store.subscribe(render)</code> in <a href="http://redux.js.org/docs/basics/Store.html">Redux</a>. I'm actually triggering a global event and letting game.js render the callback whenever necessary.</p>
+		<div class="inner-comment">
+			<p><strong>Update</strong>: I've changed from global event emitter to store.subscribe approach to simplify the code.</p>
+		</div>
 		<p>The important thing here is that we stick with the correct data flow. Which brings me to next topic.</p>
 
 		<h2 class="sub-header">Strict unidirectional data flow</h2>
@@ -139,7 +142,7 @@
 		<p>Redux has proven to be very easy to debug and fix issues. You have one single entity that represents the state of your application and the only way you can change it is by dispatching actions. I was also surprised how fast it was to integrate with a node.js server and make it broadcast certain actions to the front-end.</p>
 		<p>I've learned a lot of cool things working on this project and I hope you find this post useful. <a href="https://github.com/ramonvictor/tic-tac-toe-js">Check out Tic-Tac-Toe.js on github</a> and have fun! :)</p>
 
-		<div class="medium-link">
+		<div class="inner-comment">
 			<p>Do you wanna comment/recommend? This post is also <a href="https://medium.com/@ramonvictor/tic-tac-toe-js-redux-pattern-in-plain-javascript-fffe37f7c47a">available on Medium</a>.</p>
 		</div>
 
