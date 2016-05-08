@@ -5,7 +5,6 @@ var scoreView = require('./score-view');
 var gridView = require('./grid-view');
 var fiveiconView = require('./fiveicon-view');
 var store = require('./store');
-var events = require('./events');
 var socket = io();
 
 function TicTacToe() {
@@ -29,8 +28,8 @@ TicTacToe.prototype.init = function(config) {
 TicTacToe.prototype.eventListeners = function() {
 	this.$table.addEventListener('click', this.onCellClick.bind(this));
 
-	events.on('store:update', this.onStoreUpdate.bind(this));
-	events.on('store:update', this.checkWinner.bind(this));
+	store.subscribe(this.render.bind(this));
+	store.subscribe(this.checkWinner.bind(this));
 
 	socket.on('connect', this.onSocketConnect.bind(this));
 	socket.on('dispatch', this.onSocketDispatch.bind(this));
@@ -83,12 +82,6 @@ TicTacToe.prototype.updateCell = function(state, index) {
 	socket.emit('dispatch', action);
 };
 
-TicTacToe.prototype.onStoreUpdate = function(event) {
-	var data = event.detail;
-
-	this.render(data.prevState, data.state);
-};
-
 TicTacToe.prototype.render = function(prevState, state) {
 	if (prevState.grid !== state.grid) {
 		this.gridView.render('grid', state.grid);
@@ -112,13 +105,12 @@ TicTacToe.prototype.render = function(prevState, state) {
 	}
 };
 
-TicTacToe.prototype.checkWinner = function(event) {
+TicTacToe.prototype.checkWinner = function(prevState, state) {
 	var self = this;
-	var data = event.detail;
-	var lastTurn = data.prevState.turn;
+	var lastTurn = prevState.turn;
 
 	this.winner
-		.check(data.state.grid, lastTurn)
+		.check(state.grid, lastTurn)
 		.then(function(winnerSeq) {
 			self.showWinner(lastTurn, winnerSeq);
 		});

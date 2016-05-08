@@ -51,8 +51,7 @@
 	__webpack_require__(5);
 	__webpack_require__(6);
 	__webpack_require__(7);
-	__webpack_require__(8);
-	module.exports = __webpack_require__(9);
+	module.exports = __webpack_require__(8);
 
 
 /***/ },
@@ -110,28 +109,7 @@
 /* 2 */
 /***/ function(module, exports) {
 
-	function Events() {}
-
-	Events.prototype.on = function(name, callback) {
-		document.addEventListener(name, callback, false);
-	};
-
-	Events.prototype.trigger = function(name, data) {
-		var event = new CustomEvent(name, {
-			detail: data
-		});
-
-		document.dispatchEvent(event);
-	};
-
-	module.exports = new Events();
-
-
-/***/ },
-/* 3 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var events = __webpack_require__(2);
+	var subscribers = [];
 
 	function Store() {
 		this.prevState = {};
@@ -152,12 +130,9 @@
 		this.prevState = this.state;
 		this.state = this.update(this.state, action);
 
-		events
-			.trigger('store:update', {
-				prevState: this.prevState,
-				state: this.state
-			});
+		this.notifySubscribers();
 	};
+
 
 	Store.prototype.update = function(state, action) {
 		return {
@@ -168,6 +143,16 @@
 			turnCounter: updateCounter(state.turnCounter, action),
 			player: updatePlayer(state.player, action)
 		};
+	};
+
+	Store.prototype.subscribe = function(fn) {
+		subscribers.push(fn);
+	};
+
+	Store.prototype.notifySubscribers = function() {
+		subscribers.forEach(function(subscriber) {
+			subscriber(this.prevState, this.state);
+		}.bind(this));
 	};
 
 	function updateGrid(grid, action) {
@@ -260,7 +245,7 @@
 
 
 /***/ },
-/* 4 */
+/* 3 */
 /***/ function(module, exports) {
 
 	function Winner(grid, lastTurn) {
@@ -345,7 +330,7 @@
 
 
 /***/ },
-/* 5 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var utils = __webpack_require__(1);
@@ -380,7 +365,7 @@
 	};
 
 /***/ },
-/* 6 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var utils = __webpack_require__(1);
@@ -428,7 +413,7 @@
 
 
 /***/ },
-/* 7 */
+/* 6 */
 /***/ function(module, exports) {
 
 	function FaviconView(head) {
@@ -457,21 +442,20 @@
 
 
 /***/ },
-/* 8 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Application
 	// --------------
 	var utils = __webpack_require__(1);
-	var scoreView = __webpack_require__(5);
-	var gridView = __webpack_require__(6);
-	var fiveiconView = __webpack_require__(7);
-	var store = __webpack_require__(3);
-	var events = __webpack_require__(2);
+	var scoreView = __webpack_require__(4);
+	var gridView = __webpack_require__(5);
+	var fiveiconView = __webpack_require__(6);
+	var store = __webpack_require__(2);
 	var socket = io();
 
 	function TicTacToe() {
-		this.winner = __webpack_require__(4);
+		this.winner = __webpack_require__(3);
 	}
 
 	TicTacToe.prototype.init = function(config) {
@@ -491,8 +475,8 @@
 	TicTacToe.prototype.eventListeners = function() {
 		this.$table.addEventListener('click', this.onCellClick.bind(this));
 
-		events.on('store:update', this.onStoreUpdate.bind(this));
-		events.on('store:update', this.checkWinner.bind(this));
+		store.subscribe(this.render.bind(this));
+		store.subscribe(this.checkWinner.bind(this));
 
 		socket.on('connect', this.onSocketConnect.bind(this));
 		socket.on('dispatch', this.onSocketDispatch.bind(this));
@@ -545,12 +529,6 @@
 		socket.emit('dispatch', action);
 	};
 
-	TicTacToe.prototype.onStoreUpdate = function(event) {
-		var data = event.detail;
-
-		this.render(data.prevState, data.state);
-	};
-
 	TicTacToe.prototype.render = function(prevState, state) {
 		if (prevState.grid !== state.grid) {
 			this.gridView.render('grid', state.grid);
@@ -574,13 +552,12 @@
 		}
 	};
 
-	TicTacToe.prototype.checkWinner = function(event) {
+	TicTacToe.prototype.checkWinner = function(prevState, state) {
 		var self = this;
-		var data = event.detail;
-		var lastTurn = data.prevState.turn;
+		var lastTurn = prevState.turn;
 
 		this.winner
-			.check(data.state.grid, lastTurn)
+			.check(state.grid, lastTurn)
 			.then(function(winnerSeq) {
 				self.showWinner(lastTurn, winnerSeq);
 			});
@@ -608,7 +585,7 @@
 
 
 /***/ },
-/* 9 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	document.addEventListener('DOMContentLoaded', function() {
@@ -619,7 +596,7 @@
 				(((1+Math.random())*0x10000)|0).toString(16).substring(1);
 		}
 
-		var game = __webpack_require__(8);
+		var game = __webpack_require__(7);
 		var utils = __webpack_require__(1);
 		var room = window.location.hash;
 		var refreshForm = utils.qs('#refresh-game-form');

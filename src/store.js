@@ -1,4 +1,4 @@
-var events = require('./events');
+var subscribers = [];
 
 function Store() {
 	this.prevState = {};
@@ -19,11 +19,7 @@ Store.prototype.dispatch = function(action) {
 	this.prevState = this.state;
 	this.state = this.update(this.state, action);
 
-	events
-		.trigger('store:update', {
-			prevState: this.prevState,
-			state: this.state
-		});
+	this.notifySubscribers();
 };
 
 Store.prototype.update = function(state, action) {
@@ -35,6 +31,16 @@ Store.prototype.update = function(state, action) {
 		turnCounter: updateCounter(state.turnCounter, action),
 		player: updatePlayer(state.player, action)
 	};
+};
+
+Store.prototype.subscribe = function(fn) {
+	subscribers.push(fn);
+};
+
+Store.prototype.notifySubscribers = function() {
+	subscribers.forEach(function(subscriber) {
+		subscriber(this.prevState, this.state);
+	}.bind(this));
 };
 
 function updateGrid(grid, action) {
