@@ -58,12 +58,12 @@ this.$table.addEventListener('click', function(event) {
 ```javascript
 // Reducer (pure function)
 function updatePlayer(player, action) {
-	switch (action.type) {
-		case 'PICK_SIDE':
-			return action.side;
-		default:
-			return player || '';
-	}
+  switch (action.type) {
+    case 'PICK_SIDE':
+      return action.side;
+    default:
+      return player || '';
+  }
 }
 
 // Call reducer on Store.update()
@@ -80,16 +80,11 @@ Store.prototype.update = function(state, action) {
 [Game.js](https://github.com/ramonvictor/tic-tac-toe-js/blob/master/src/game.js) handles UI changes:
 
 ```javascript
-var events = require('./events');
+var store = require('./store');
 var gridView = require('./grid-view');
 
 TicTacToe.prototype.eventListeners = function() {
-  events.on('store:update', this.onStoreUpdate.bind(this));
-};
-
-TicTacToe.prototype.onStoreUpdate = function(event) {
-  var data = event.detail;
-  this.render(data.prevState, data.state);
+  store.subscribe(this.render.bind(this));
 };
 
 TicTacToe.prototype.render = function(prevState, state) {
