@@ -101,11 +101,6 @@ body{
 	width: 33.3%;
 	height: 33.3%;
 	position: relative;
-
-	.is-ie &{
-		vertical-align: middle;
-		text-align: center;
-	}
 }
 
 .turn-display{
@@ -260,14 +255,6 @@ body{
 	left: 50%;
 	top: 50%;
 	margin: -47px 0 0 -47px;
-
-	.is-ie .tic-tac-toe-table &{
-		margin: 0;
-		position: static;
-		left: auto;
-		top: auto;
-		display: inline-block;
-	}
 
 	&.is-winner-cell{
 		border-color: #5bd1ab;
@@ -468,4 +455,20 @@ body{
 
 @-webkit-keyframes spinner {
     to {-webkit-transform: rotate(360deg);}
+}
+
+// IE10+ CSS styles
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+	.tic-tac-toe-table-cell{
+		vertical-align: middle;
+		text-align: center;
+	}
+
+	.tic-tac-toe-table .o{
+		margin: 0;
+		position: static;
+		left: auto;
+		top: auto;
+		display: inline-block;
+	}
 }

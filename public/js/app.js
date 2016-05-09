@@ -133,7 +133,6 @@
 		this.notifySubscribers();
 	};
 
-
 	Store.prototype.update = function(state, action) {
 		return {
 			grid: updateGrid(state.grid, action),
@@ -631,6 +630,11 @@
 					storage.setItem('ttt-pop-over-shown', 1);
 				});
 			});
+		}
+
+		// Promise polyfill for IE users.
+		if (typeof Promise == 'undefined') {
+			window.Promise = window.ES6Promise.Promise;
 		}
 
 	}, false);

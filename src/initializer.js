@@ -43,4 +43,9 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	}
 
+	// Promise polyfill for IE users.
+	if (typeof Promise == 'undefined') {
+		window.Promise = window.ES6Promise.Promise;
+	}
+
 }, false);
