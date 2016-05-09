@@ -492,7 +492,7 @@
 	TicTacToe.prototype.onCellClick = function(event) {
 		var target = event.target;
 		var classes = target.classList;
-		var index = target.dataset.index;
+		var index = target.getAttribute('data-index');
 		var state = store.getState();
 
 		if (!classes.contains('js-cell') || classes.contains('is-filled') ||
