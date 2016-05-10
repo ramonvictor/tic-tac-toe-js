@@ -97,6 +97,15 @@ TicTacToe.prototype.render = function(prevState, state) {
 
 Further details about implementation you can [find on this page](http://ramonvictor.github.io/tic-tac-toe-js/).
 
+## Browser support
+
+The game has been tested in the following platforms:
+
+Latest | Latest | 10+ | Latest |
+--- | --- | --- | --- |
+![Chrome](https://raw.github.com/alrra/browser-logos/master/chrome/chrome_48x48.png) | ![Firefox](https://raw.github.com/alrra/browser-logos/master/firefox/firefox_48x48.png) | ![IE](https://raw.github.com/alrra/browser-logos/master/internet-explorer/internet-explorer_48x48.png) |  ![Safari](https://raw.github.com/alrra/browser-logos/master/safari/safari_48x48.png)
+
+
 ## Development stack
 - Server: NodeJS / Express / Socket.io
 - Client: VanillaJS / Redux
