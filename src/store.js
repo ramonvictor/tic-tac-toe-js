@@ -7,11 +7,11 @@ function Store() {
 	this.state = this.update(this.state, {});
 }
 
-Store.prototype.getState = function(action) {
+Store.prototype.getState = function() {
 	return this.state;
 };
 
-Store.prototype.getPrevState = function(action) {
+Store.prototype.getPrevState = function() {
 	return this.prevState;
 };
 
