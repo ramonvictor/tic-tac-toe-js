@@ -19,6 +19,18 @@ Store.prototype.dispatch = function(action) {
 	this.prevState = this.state;
 	this.state = this.update(this.state, action);
 
+	console.groupCollapsed(action.type);
+		console.group('action:');
+			console.log(JSON.stringify(action, '', '\t'));
+		console.groupEnd();
+		console.groupCollapsed('previous state:');
+			console.log(JSON.stringify(this.prevState, '', '\t'));
+		console.groupEnd();
+		console.groupCollapsed('state:');
+			console.log(JSON.stringify(this.state, '', '\t'));
+		console.groupEnd();
+	console.groupEnd();
+
 	this.notifySubscribers();
 };
 
