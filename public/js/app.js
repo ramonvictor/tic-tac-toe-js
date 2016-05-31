@@ -110,27 +110,61 @@
 /***/ function(module, exports) {
 
 	var subscribers = [];
+	var middlewares;
 
-	function Store() {
+	function Store(mid) {
+		middlewares = mid || [];
+
 		this.prevState = {};
 		this.state = {};
 
 		this.state = this.update(this.state, {});
 	}
 
-	Store.prototype.getState = function(action) {
+	Store.prototype.getState = function() {
 		return this.state;
 	};
 
-	Store.prototype.getPrevState = function(action) {
+	Store.prototype.getPrevState = function() {
 		return this.prevState;
 	};
 
-	Store.prototype.dispatch = function(action) {
+	Store.prototype._dispatch = function(action) {
 		this.prevState = this.state;
 		this.state = this.update(this.state, action);
 
 		this.notifySubscribers();
+
+		return action;
+	};
+
+	Store.prototype.dispatch = function() {
+		if (middlewares.length > 0) {
+			var combined = this._combineMiddlewares.apply(this, arguments);
+			return combined(arguments[0]);
+		} else {
+			return this._dispatch.apply(this, arguments);
+		}
+	};
+
+	Store.prototype._combineMiddlewares = function() {
+		var args = arguments;
+		var self = this;
+
+		var middlewareAPI = {
+			getState: this.getState.bind(this),
+			dispatch: this._dispatch.bind(this)
+		};
+
+		var chain = middlewares.map(function(middleware) {
+			return middleware(middlewareAPI);
+		});
+
+		return chain.reduceRight(function(composed, fn) {
+			return fn(composed);
+		}, function() {
+			self._dispatch.apply(self, args);
+		});
 	};
 
 	Store.prototype.update = function(state, action) {
@@ -240,7 +274,7 @@
 		}
 	}
 
-	module.exports = new Store();
+	module.exports = Store;
 
 
 /***/ },
@@ -450,9 +484,34 @@
 	var scoreView = __webpack_require__(4);
 	var gridView = __webpack_require__(5);
 	var fiveiconView = __webpack_require__(6);
-	var store = __webpack_require__(2);
+	var Store = __webpack_require__(2);
 	var socket = io();
 
+	// Middlewares
+	// ----------------
+	var store = new Store([function logger(store) {
+		return function(next) {
+			return function(action) {
+				console.groupCollapsed(action.type);
+						console.group('action:');
+							console.log(JSON.stringify(action, '', '\t'));
+						console.groupEnd();
+						console.groupCollapsed('previous state:');
+							console.log(JSON.stringify(store.getState(), '', '\t'));
+						console.groupEnd();
+						var result = next(action);
+						console.groupCollapsed('state:');
+							console.log(JSON.stringify(store.getState(), '', '\t'));
+						console.groupEnd();
+				console.groupEnd();
+				return result;
+			};
+		};
+	}]);
+
+
+	// Game
+	// ----------------
 	function TicTacToe() {
 		this.winner = __webpack_require__(3);
 	}

@@ -1,25 +1,59 @@
 var subscribers = [];
+var middlewares;
 
-function Store() {
+function Store(mid) {
+	middlewares = mid || [];
+
 	this.prevState = {};
 	this.state = {};
 
 	this.state = this.update(this.state, {});
 }
 
-Store.prototype.getState = function(action) {
+Store.prototype.getState = function() {
 	return this.state;
 };
 
-Store.prototype.getPrevState = function(action) {
+Store.prototype.getPrevState = function() {
 	return this.prevState;
 };
 
-Store.prototype.dispatch = function(action) {
+Store.prototype._dispatch = function(action) {
 	this.prevState = this.state;
 	this.state = this.update(this.state, action);
 
 	this.notifySubscribers();
+
+	return action;
+};
+
+Store.prototype.dispatch = function() {
+	if (middlewares.length > 0) {
+		var combined = this._combineMiddlewares.apply(this, arguments);
+		return combined(arguments[0]);
+	} else {
+		return this._dispatch.apply(this, arguments);
+	}
+};
+
+Store.prototype._combineMiddlewares = function() {
+	var args = arguments;
+	var self = this;
+
+	var middlewareAPI = {
+		getState: this.getState.bind(this),
+		dispatch: this._dispatch.bind(this)
+	};
+
+	var chain = middlewares.map(function(middleware) {
+		return middleware(middlewareAPI);
+	});
+
+	return chain.reduceRight(function(composed, fn) {
+		return fn(composed);
+	}, function() {
+		self._dispatch.apply(self, args);
+	});
 };
 
 Store.prototype.update = function(state, action) {
@@ -129,4 +163,4 @@ function updatePlayer(player, action) {
 	}
 }
 
-module.exports = new Store();
+module.exports = Store;
