@@ -51,7 +51,7 @@
 	__webpack_require__(5);
 	__webpack_require__(6);
 	__webpack_require__(7);
-	module.exports = __webpack_require__(8);
+	module.exports = __webpack_require__(9);
 
 
 /***/ },
@@ -148,7 +148,6 @@
 	};
 
 	Store.prototype._combineMiddlewares = function() {
-		var args = arguments;
 		var self = this;
 
 		var middlewareAPI = {
@@ -156,14 +155,16 @@
 			dispatch: this._dispatch.bind(this)
 		};
 
+		// Inject middleware api into all middlewares
 		var chain = middlewares.map(function(middleware) {
 			return middleware(middlewareAPI);
 		});
 
+		// Init reduceRight with `() => _dispatch()` as initial value
 		return chain.reduceRight(function(composed, fn) {
 			return fn(composed);
 		}, function() {
-			self._dispatch.apply(self, args);
+			self._dispatch.apply(self, arguments);
 		});
 	};
 
@@ -485,30 +486,9 @@
 	var gridView = __webpack_require__(5);
 	var fiveiconView = __webpack_require__(6);
 	var Store = __webpack_require__(2);
+	var logger = __webpack_require__(8);
 	var socket = io();
-
-	// Middlewares
-	// ----------------
-	var store = new Store([function logger(store) {
-		return function(next) {
-			return function(action) {
-				console.groupCollapsed(action.type);
-						console.group('action:');
-							console.log(JSON.stringify(action, '', '\t'));
-						console.groupEnd();
-						console.groupCollapsed('previous state:');
-							console.log(JSON.stringify(store.getState(), '', '\t'));
-						console.groupEnd();
-						var result = next(action);
-						console.groupCollapsed('state:');
-							console.log(JSON.stringify(store.getState(), '', '\t'));
-						console.groupEnd();
-				console.groupEnd();
-				return result;
-			};
-		};
-	}]);
-
+	var store = new Store([logger]);
 
 	// Game
 	// ----------------
@@ -644,6 +624,30 @@
 
 /***/ },
 /* 8 */
+/***/ function(module, exports) {
+
+	module.exports = function logger(store) {
+		return function loggerGetDispatch(next) {
+			return function(action) {
+				console.groupCollapsed(action.type);
+						console.group('action:');
+							console.log(JSON.stringify(action, '', '\t'));
+						console.groupEnd();
+						console.groupCollapsed('previous state:');
+							console.log(JSON.stringify(store.getState(), '', '\t'));
+						console.groupEnd();
+						var result = next(action);
+						console.groupCollapsed('state:');
+							console.log(JSON.stringify(store.getState(), '', '\t'));
+						console.groupEnd();
+				console.groupEnd();
+				return result;
+			};
+		};
+	};
+
+/***/ },
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	document.addEventListener('DOMContentLoaded', function() {
