@@ -29,8 +29,8 @@ Store.prototype._dispatch = function(action) {
 
 Store.prototype.dispatch = function() {
 	if (middlewares.length > 0) {
-		var combined = this._combineMiddlewares.apply(this, arguments);
-		return combined(arguments[0]);
+		var combined = this._combineMiddlewares();
+		return combined.apply(this, arguments);
 	} else {
 		return this._dispatch.apply(this, arguments);
 	}
@@ -53,7 +53,7 @@ Store.prototype._combineMiddlewares = function() {
 	return chain.reduceRight(function(composed, fn) {
 		return fn(composed);
 	}, function() {
-		self._dispatch.apply(self, arguments);
+		return self._dispatch.apply(self, arguments);
 	});
 };
 
