@@ -4,9 +4,13 @@ var utils = require('./utils');
 var scoreView = require('./score-view');
 var gridView = require('./grid-view');
 var fiveiconView = require('./fiveicon-view');
-var store = require('./store');
+var Store = require('./store');
+// var logger = require('./logger');
 var socket = io();
+var store = new Store();
 
+// Game
+// ----------------
 function TicTacToe() {
 	this.winner = require('./winner');
 }

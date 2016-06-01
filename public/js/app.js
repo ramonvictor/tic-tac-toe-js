@@ -110,30 +110,57 @@
 /***/ function(module, exports) {
 
 	var subscribers = [];
+	var middlewares;
 
-	function Store() {
+	function Store(mid) {
+		middlewares = mid || [];
+
 		this.prevState = {};
 		this.state = {};
 
-		this.state = this.update(this.state, {});
+		this.state = this.reduce(this.state, {});
+		this.dispatch = this._combineMiddlewares();
 	}
 
-	Store.prototype.getState = function(action) {
+	Store.prototype.getState = function() {
 		return this.state;
 	};
 
-	Store.prototype.getPrevState = function(action) {
+	Store.prototype.getPrevState = function() {
 		return this.prevState;
 	};
 
-	Store.prototype.dispatch = function(action) {
+	Store.prototype._dispatch = function(action) {
 		this.prevState = this.state;
-		this.state = this.update(this.state, action);
+		this.state = this.reduce(this.state, action);
 
 		this.notifySubscribers();
+
+		return action;
 	};
 
-	Store.prototype.update = function(state, action) {
+	Store.prototype._combineMiddlewares = function() {
+		var self = this;
+
+		var middlewareAPI = {
+			getState: this.getState.bind(this),
+			dispatch: function() {
+				return self._dispatch.apply(self, arguments);
+			}
+		};
+
+		// Inject store "proxy" into all middleware
+		var chain = middlewares.map(function(middleware) {
+			return middleware(middlewareAPI);
+		});
+
+		// Init reduceRight with middlewareAPI.dispatch as initial value
+		return chain.reduceRight(function(composed, fn) {
+			return fn(composed);
+		}, middlewareAPI.dispatch);
+	};
+
+	Store.prototype.reduce = function(state, action) {
 		return {
 			grid: updateGrid(state.grid, action),
 			turn: updateTurn(state.turn, action),
@@ -240,7 +267,7 @@
 		}
 	}
 
-	module.exports = new Store();
+	module.exports = Store;
 
 
 /***/ },
@@ -450,9 +477,13 @@
 	var scoreView = __webpack_require__(4);
 	var gridView = __webpack_require__(5);
 	var fiveiconView = __webpack_require__(6);
-	var store = __webpack_require__(2);
+	var Store = __webpack_require__(2);
+	// var logger = require('./logger');
 	var socket = io();
+	var store = new Store();
 
+	// Game
+	// ----------------
 	function TicTacToe() {
 		this.winner = __webpack_require__(3);
 	}

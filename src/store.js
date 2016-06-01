@@ -1,10 +1,14 @@
 var subscribers = [];
+var middlewares;
 
-function Store() {
+function Store(mid) {
+	middlewares = mid || [];
+
 	this.prevState = {};
 	this.state = {};
 
-	this.state = this.update(this.state, {});
+	this.state = this.reduce(this.state, {});
+	this.dispatch = this._combineMiddlewares();
 }
 
 Store.prototype.getState = function() {
@@ -15,14 +19,37 @@ Store.prototype.getPrevState = function() {
 	return this.prevState;
 };
 
-Store.prototype.dispatch = function(action) {
+Store.prototype._dispatch = function(action) {
 	this.prevState = this.state;
-	this.state = this.update(this.state, action);
+	this.state = this.reduce(this.state, action);
 
 	this.notifySubscribers();
+
+	return action;
 };
 
-Store.prototype.update = function(state, action) {
+Store.prototype._combineMiddlewares = function() {
+	var self = this;
+
+	var middlewareAPI = {
+		getState: this.getState.bind(this),
+		dispatch: function() {
+			return self._dispatch.apply(self, arguments);
+		}
+	};
+
+	// Inject store "proxy" into all middleware
+	var chain = middlewares.map(function(middleware) {
+		return middleware(middlewareAPI);
+	});
+
+	// Init reduceRight with middlewareAPI.dispatch as initial value
+	return chain.reduceRight(function(composed, fn) {
+		return fn(composed);
+	}, middlewareAPI.dispatch);
+};
+
+Store.prototype.reduce = function(state, action) {
 	return {
 		grid: updateGrid(state.grid, action),
 		turn: updateTurn(state.turn, action),
@@ -129,4 +156,4 @@ function updatePlayer(player, action) {
 	}
 }
 
-module.exports = new Store();
+module.exports = Store;
