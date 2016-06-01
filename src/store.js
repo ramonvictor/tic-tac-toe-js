@@ -7,7 +7,8 @@ function Store(mid) {
 	this.prevState = {};
 	this.state = {};
 
-	this.state = this.update(this.state, {});
+	this.state = this.reduce(this.state, {});
+	this.dispatch = this._combineMiddlewares();
 }
 
 Store.prototype.getState = function() {
@@ -20,20 +21,11 @@ Store.prototype.getPrevState = function() {
 
 Store.prototype._dispatch = function(action) {
 	this.prevState = this.state;
-	this.state = this.update(this.state, action);
+	this.state = this.reduce(this.state, action);
 
 	this.notifySubscribers();
 
 	return action;
-};
-
-Store.prototype.dispatch = function() {
-	if (middlewares.length > 0) {
-		var combined = this._combineMiddlewares();
-		return combined.apply(this, arguments);
-	} else {
-		return this._dispatch.apply(this, arguments);
-	}
 };
 
 Store.prototype._combineMiddlewares = function() {
@@ -57,7 +49,7 @@ Store.prototype._combineMiddlewares = function() {
 	}, middlewareAPI.dispatch);
 };
 
-Store.prototype.update = function(state, action) {
+Store.prototype.reduce = function(state, action) {
 	return {
 		grid: updateGrid(state.grid, action),
 		turn: updateTurn(state.turn, action),
