@@ -41,20 +41,20 @@ Store.prototype._combineMiddlewares = function() {
 
 	var middlewareAPI = {
 		getState: this.getState.bind(this),
-		dispatch: this._dispatch.bind(this)
+		dispatch: function() {
+			return self._dispatch.apply(self, arguments);
+		}
 	};
 
-	// Inject middleware api into all middlewares
+	// Inject store "proxy" into all middleware
 	var chain = middlewares.map(function(middleware) {
 		return middleware(middlewareAPI);
 	});
 
-	// Init reduceRight with `() => _dispatch()` as initial value
+	// Init reduceRight with middlewareAPI.dispatch as initial value
 	return chain.reduceRight(function(composed, fn) {
 		return fn(composed);
-	}, function() {
-		return self._dispatch.apply(self, arguments);
-	});
+	}, middlewareAPI.dispatch);
 };
 
 Store.prototype.update = function(state, action) {
