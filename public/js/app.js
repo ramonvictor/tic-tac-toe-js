@@ -484,11 +484,7 @@
 
 	// Game
 	// ----------------
-	function TicTacToe() {
-		this.winner = __webpack_require__(3);
-	}
-
-	TicTacToe.prototype.init = function(config) {
+	function TicTacToe(config) {
 		this.$head = document.head || utils.qs('head');
 		this.$table = utils.qs(config.gridElement);
 		this.$players = utils.qs(config.playersElement);
@@ -500,7 +496,7 @@
 		this.fiveiconView = fiveiconView(this.$head);
 
 		this.eventListeners();
-	};
+	}
 
 	TicTacToe.prototype.eventListeners = function() {
 		this.$table.addEventListener('click', this.onCellClick.bind(this));
@@ -581,7 +577,9 @@
 		}
 	};
 
-	module.exports = new TicTacToe();
+	module.exports = function(config) {
+		return new TicTacToe(config);
+	};
 
 
 /***/ },
@@ -680,7 +678,7 @@
 		var popOver = utils.qs('#pop-over');
 		var storage = window.localStorage;
 
-		game.init({
+		game({
 			gridElement: '.js-table',
 			playersElement: '.js-players-display',
 			room: room.replace('#', '')

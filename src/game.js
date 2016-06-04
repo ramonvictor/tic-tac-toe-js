@@ -11,11 +11,7 @@ var store = new Store([defineWinner]);
 
 // Game
 // ----------------
-function TicTacToe() {
-	this.winner = require('./winner');
-}
-
-TicTacToe.prototype.init = function(config) {
+function TicTacToe(config) {
 	this.$head = document.head || utils.qs('head');
 	this.$table = utils.qs(config.gridElement);
 	this.$players = utils.qs(config.playersElement);
@@ -27,7 +23,7 @@ TicTacToe.prototype.init = function(config) {
 	this.fiveiconView = fiveiconView(this.$head);
 
 	this.eventListeners();
-};
+}
 
 TicTacToe.prototype.eventListeners = function() {
 	this.$table.addEventListener('click', this.onCellClick.bind(this));
@@ -108,4 +104,6 @@ TicTacToe.prototype.render = function(prevState, state) {
 	}
 };
 
-module.exports = new TicTacToe();
+module.exports = function(config) {
+	return new TicTacToe(config);
+};

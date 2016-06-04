@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	var popOver = utils.qs('#pop-over');
 	var storage = window.localStorage;
 
-	game.init({
+	game({
 		gridElement: '.js-table',
 		playersElement: '.js-players-display',
 		room: room.replace('#', '')
