@@ -30,7 +30,7 @@ var target = {
     js_concat_src : [                                   // all js files that should be concatinated
         'src/utils.js',
         'src/store.js',
-        'src/winner.js',
+        'src/winner-service.js',
         'src/score-view.js',
         'src/grid-view.js',
         'src/fiveicon-view.js',

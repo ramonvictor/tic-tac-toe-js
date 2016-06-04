@@ -1,5 +1,5 @@
 var utils = require('../utils');
-var winnerService = require('../winner');
+var winnerService = require('../winner-service');
 var actions = require('../actions');
 
 module.exports = function defineWinner(store) {
