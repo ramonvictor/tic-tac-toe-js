@@ -1,6 +1,7 @@
 // Application
 // --------------
 var utils = require('./utils');
+var actions = require('./actions');
 var scoreView = require('./score-view');
 var gridView = require('./grid-view');
 var fiveiconView = require('./fiveicon-view');
@@ -102,6 +103,12 @@ TicTacToe.prototype.render = function(prevState, state) {
 	if (!prevState.winnerSequence.length && state.turnCounter === 9) {
 		this.restartGame();
 	}
+};
+
+TicTacToe.prototype.restartGame = function() {
+	utils.wait(1500, function() {
+		store.dispatch(actions.restart());
+	});
 };
 
 module.exports = function(config) {

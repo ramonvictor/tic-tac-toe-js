@@ -461,11 +461,12 @@
 	// Application
 	// --------------
 	var utils = __webpack_require__(1);
+	var actions = __webpack_require__(8);
 	var scoreView = __webpack_require__(4);
 	var gridView = __webpack_require__(5);
 	var fiveiconView = __webpack_require__(6);
 	var Store = __webpack_require__(2);
-	var defineWinner = __webpack_require__(8);
+	var defineWinner = __webpack_require__(9);
 	var socket = io();
 	var store = new Store([defineWinner]);
 
@@ -564,6 +565,12 @@
 		}
 	};
 
+	TicTacToe.prototype.restartGame = function() {
+		utils.wait(1500, function() {
+			store.dispatch(actions.restart());
+		});
+	};
+
 	module.exports = function(config) {
 		return new TicTacToe(config);
 	};
@@ -571,46 +578,6 @@
 
 /***/ },
 /* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var utils = __webpack_require__(1);
-	var winnerService = __webpack_require__(3);
-	var actions = __webpack_require__(9);
-
-	module.exports = function defineWinner(store) {
-		return function defineWinnerGetDispatch(next) {
-			return function(action) {
-				var winnerSeq;
-				var prevState = store.getState();
-				var lastTurn = prevState.turn;
-
-				// Dispatch action
-				var result = next(action);
-
-				// Get new state
-				var state = store.getState();
-
-				// Check winner
-				if (action.type !== 'SHOW_WINNER' &&
-					action.type !== 'RESTART_GAME') {
-					winnerSeq = winnerService.check(state.grid, lastTurn);
-
-					if (winnerSeq.length > 0) {
-						store.dispatch(actions.showWinner(lastTurn, winnerSeq));
-
-						utils.wait(1500, function() {
-							store.dispatch(actions.restart());
-						});
-					}
-				}
-
-				return result;
-			};
-		};
-	};
-
-/***/ },
-/* 9 */
 /***/ function(module, exports) {
 
 	var actions = {};
@@ -645,6 +612,46 @@
 	};
 
 	module.exports = actions;
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var utils = __webpack_require__(1);
+	var winnerService = __webpack_require__(3);
+	var actions = __webpack_require__(8);
+
+	module.exports = function defineWinner(store) {
+		return function defineWinnerGetDispatch(next) {
+			return function(action) {
+				var winnerSeq;
+				var prevState = store.getState();
+				var lastTurn = prevState.turn;
+
+				// Dispatch action
+				var result = next(action);
+
+				// Get new state
+				var state = store.getState();
+
+				// Check winner
+				if (action.type !== 'SHOW_WINNER' &&
+					action.type !== 'RESTART_GAME') {
+					winnerSeq = winnerService.check(state.grid, lastTurn);
+
+					if (winnerSeq.length > 0) {
+						store.dispatch(actions.showWinner(lastTurn, winnerSeq));
+
+						utils.wait(1500, function() {
+							store.dispatch(actions.restart());
+						});
+					}
+				}
+
+				return result;
+			};
+		};
+	};
 
 /***/ },
 /* 10 */
