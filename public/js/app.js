@@ -70,13 +70,8 @@
 		return context.querySelectorAll(selector);
 	};
 
-	utils.wait = function(ms) {
-		ms = ms || 500;
-		return new Promise(function(resolve, reject){
-			window.setTimeout(function() {
-				resolve();
-			}, ms);
-		});
+	utils.wait = function(ms, cb) {
+		return window.setTimeout(cb, (ms || 500));
 	};
 
 	if (typeof Object.assign != 'function') {
@@ -279,15 +274,7 @@
 	}
 
 	Winner.prototype.check = function(grid, lastTurn) {
-		var self = this;
-
-		return new Promise(function(resolve, reject) {
-			var winnerSeq = self.hasWinner(grid, lastTurn);
-
-			if (winnerSeq.length > 0) {
-				resolve(winnerSeq);
-			}
-		});
+		return this.hasWinner(grid, lastTurn);
 	};
 
 	Winner.prototype.getRows = function() {
@@ -593,6 +580,7 @@
 	module.exports = function defineWinner(store) {
 		return function defineWinnerGetDispatch(next) {
 			return function(action) {
+				var winnerSeq;
 				var prevState = store.getState();
 				var lastTurn = prevState.turn;
 
@@ -605,15 +593,15 @@
 				// Check winner
 				if (action.type !== 'SHOW_WINNER' &&
 					action.type !== 'RESTART_GAME') {
-					winnerService
-						.check(state.grid, lastTurn)
-						.then(function(winnerSeq) {
-							store.dispatch(actions.showWinner(lastTurn, winnerSeq));
+					winnerSeq = winnerService.check(state.grid, lastTurn);
 
-							utils.wait(1500).then(function() {
-								store.dispatch(actions.restart());
-							});
+					if (winnerSeq.length > 0) {
+						store.dispatch(actions.showWinner(lastTurn, winnerSeq));
+
+						utils.wait(1500, function() {
+							store.dispatch(actions.restart());
 						});
+					}
 				}
 
 				return result;
@@ -700,16 +688,11 @@
 
 			popOver.addEventListener('click', function() {
 				popOver.classList.add('hide');
-				utils.wait(300).then(function() {
+				utils.wait(300, function() {
 					popOver.style.display = 'none';
 					storage.setItem('ttt-pop-over-shown', 1);
 				});
 			});
-		}
-
-		// Promise polyfill for IE users.
-		if (typeof Promise == 'undefined') {
-			window.Promise = window.ES6Promise.Promise;
 		}
 
 	}, false);

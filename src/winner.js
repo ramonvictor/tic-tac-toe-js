@@ -3,15 +3,7 @@ function Winner(grid, lastTurn) {
 }
 
 Winner.prototype.check = function(grid, lastTurn) {
-	var self = this;
-
-	return new Promise(function(resolve, reject) {
-		var winnerSeq = self.hasWinner(grid, lastTurn);
-
-		if (winnerSeq.length > 0) {
-			resolve(winnerSeq);
-		}
-	});
+	return this.hasWinner(grid, lastTurn);
 };
 
 Winner.prototype.getRows = function() {

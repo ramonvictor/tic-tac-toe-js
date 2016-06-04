@@ -5,6 +5,7 @@ var actions = require('../actions');
 module.exports = function defineWinner(store) {
 	return function defineWinnerGetDispatch(next) {
 		return function(action) {
+			var winnerSeq;
 			var prevState = store.getState();
 			var lastTurn = prevState.turn;
 
@@ -17,15 +18,15 @@ module.exports = function defineWinner(store) {
 			// Check winner
 			if (action.type !== 'SHOW_WINNER' &&
 				action.type !== 'RESTART_GAME') {
-				winnerService
-					.check(state.grid, lastTurn)
-					.then(function(winnerSeq) {
-						store.dispatch(actions.showWinner(lastTurn, winnerSeq));
+				winnerSeq = winnerService.check(state.grid, lastTurn);
 
-						utils.wait(1500).then(function() {
-							store.dispatch(actions.restart());
-						});
+				if (winnerSeq.length > 0) {
+					store.dispatch(actions.showWinner(lastTurn, winnerSeq));
+
+					utils.wait(1500, function() {
+						store.dispatch(actions.restart());
 					});
+				}
 			}
 
 			return result;

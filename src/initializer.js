@@ -36,16 +36,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		popOver.addEventListener('click', function() {
 			popOver.classList.add('hide');
-			utils.wait(300).then(function() {
+			utils.wait(300, function() {
 				popOver.style.display = 'none';
 				storage.setItem('ttt-pop-over-shown', 1);
 			});
 		});
-	}
-
-	// Promise polyfill for IE users.
-	if (typeof Promise == 'undefined') {
-		window.Promise = window.ES6Promise.Promise;
 	}
 
 }, false);
