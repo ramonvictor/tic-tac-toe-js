@@ -51,7 +51,7 @@
 	__webpack_require__(5);
 	__webpack_require__(6);
 	__webpack_require__(7);
-	module.exports = __webpack_require__(8);
+	module.exports = __webpack_require__(10);
 
 
 /***/ },
@@ -478,9 +478,9 @@
 	var gridView = __webpack_require__(5);
 	var fiveiconView = __webpack_require__(6);
 	var Store = __webpack_require__(2);
-	// var logger = require('./logger');
+	var defineWinner = __webpack_require__(8);
 	var socket = io();
-	var store = new Store();
+	var store = new Store([defineWinner]);
 
 	// Game
 	// ----------------
@@ -506,7 +506,6 @@
 		this.$table.addEventListener('click', this.onCellClick.bind(this));
 
 		store.subscribe(this.render.bind(this));
-		store.subscribe(this.checkWinner.bind(this));
 
 		socket.on('connect', this.onSocketConnect.bind(this));
 		socket.on('dispatch', this.onSocketDispatch.bind(this));
@@ -582,40 +581,87 @@
 		}
 	};
 
-	TicTacToe.prototype.checkWinner = function(prevState, state) {
-		var self = this;
-		var lastTurn = prevState.turn;
-
-		this.winner
-			.check(state.grid, lastTurn)
-			.then(function(winnerSeq) {
-				self.showWinner(lastTurn, winnerSeq);
-			});
-	};
-
-	TicTacToe.prototype.showWinner = function(lastTurn, sequence) {
-		store.dispatch({
-			type: 'SHOW_WINNER',
-			winner: lastTurn,
-			sequence: sequence
-		});
-
-		this.restartGame();
-	};
-
-	TicTacToe.prototype.restartGame = function() {
-		utils.wait(1500).then(function() {
-			store.dispatch({
-				type: 'RESTART_GAME'
-			});
-		});
-	};
-
 	module.exports = new TicTacToe();
 
 
 /***/ },
 /* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var utils = __webpack_require__(1);
+	var winnerService = __webpack_require__(3);
+	var actions = __webpack_require__(9);
+
+	module.exports = function defineWinner(store) {
+		return function defineWinnerGetDispatch(next) {
+			return function(action) {
+				var prevState = store.getState();
+				var lastTurn = prevState.turn;
+
+				// Dispatch action
+				var result = next(action);
+
+				// Get new state
+				var state = store.getState();
+
+				// Check winner
+				if (action.type !== 'SHOW_WINNER' &&
+					action.type !== 'RESTART_GAME') {
+					winnerService
+						.check(state.grid, lastTurn)
+						.then(function(winnerSeq) {
+							store.dispatch(actions.showWinner(lastTurn, winnerSeq));
+
+							utils.wait(1500).then(function() {
+								store.dispatch(actions.restart());
+							});
+						});
+				}
+
+				return result;
+			};
+		};
+	};
+
+/***/ },
+/* 9 */
+/***/ function(module, exports) {
+
+	var actions = {};
+
+	actions.pickSide = function(turn) {
+		return {
+			type: 'PICK_SIDE',
+			side: turn
+		};
+	};
+
+	actions.setCell = function(turn, index, room) {
+		return {
+			type: turn === 'x' ? 'SET_X' : 'SET_O',
+			index: parseInt(index, 10),
+			room: room
+		};
+	};
+
+	actions.showWinner = function(lastTurn, winnerSeq) {
+		return {
+			type: 'SHOW_WINNER',
+			winner: lastTurn,
+			sequence: winnerSeq
+		};
+	};
+
+	actions.restart = function() {
+		return {
+			type: 'RESTART_GAME'
+		};
+	};
+
+	module.exports = actions;
+
+/***/ },
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	document.addEventListener('DOMContentLoaded', function() {

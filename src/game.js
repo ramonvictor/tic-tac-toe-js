@@ -5,9 +5,9 @@ var scoreView = require('./score-view');
 var gridView = require('./grid-view');
 var fiveiconView = require('./fiveicon-view');
 var Store = require('./store');
-// var logger = require('./logger');
+var defineWinner = require('./middlewares/define-winner');
 var socket = io();
-var store = new Store();
+var store = new Store([defineWinner]);
 
 // Game
 // ----------------
@@ -33,7 +33,6 @@ TicTacToe.prototype.eventListeners = function() {
 	this.$table.addEventListener('click', this.onCellClick.bind(this));
 
 	store.subscribe(this.render.bind(this));
-	store.subscribe(this.checkWinner.bind(this));
 
 	socket.on('connect', this.onSocketConnect.bind(this));
 	socket.on('dispatch', this.onSocketDispatch.bind(this));
@@ -107,35 +106,6 @@ TicTacToe.prototype.render = function(prevState, state) {
 	if (!prevState.winnerSequence.length && state.turnCounter === 9) {
 		this.restartGame();
 	}
-};
-
-TicTacToe.prototype.checkWinner = function(prevState, state) {
-	var self = this;
-	var lastTurn = prevState.turn;
-
-	this.winner
-		.check(state.grid, lastTurn)
-		.then(function(winnerSeq) {
-			self.showWinner(lastTurn, winnerSeq);
-		});
-};
-
-TicTacToe.prototype.showWinner = function(lastTurn, sequence) {
-	store.dispatch({
-		type: 'SHOW_WINNER',
-		winner: lastTurn,
-		sequence: sequence
-	});
-
-	this.restartGame();
-};
-
-TicTacToe.prototype.restartGame = function() {
-	utils.wait(1500).then(function() {
-		store.dispatch({
-			type: 'RESTART_GAME'
-		});
-	});
 };
 
 module.exports = new TicTacToe();
