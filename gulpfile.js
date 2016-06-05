@@ -15,7 +15,8 @@ var minifycss = require('gulp-minify-css');             // minify the css files
 var browserSync = require('browser-sync').create();     // inject code to all devices
 var autoprefixer = require('gulp-autoprefixer');        // sets missing browserprefixes
 var nodemon = require('gulp-nodemon');
-var webpack = require('webpack-stream');
+var webpack = require('webpack');
+var webpackStream = require('webpack-stream');
 var port = process.env.PORT || 3000;
 
 /*******************************************************************************
@@ -96,7 +97,18 @@ gulp.task('nodemon', function(cb) {
 
 gulp.task('webpack', function() {
   return gulp.src(target.js_concat_src)
-    .pipe(webpack({ output: { filename: 'app.js' }}))
+    .pipe(webpackStream({
+        output: {
+            filename: 'app.js'
+        },
+        plugins: [
+            new webpack.DefinePlugin({
+                'process.env': {
+                    'NODE_ENV': (JSON.stringify(process.env.NODE_ENV) || '')
+                }
+            })
+        ]
+    }))
     .pipe(gulp.dest(target.js_dest));
 });
 
