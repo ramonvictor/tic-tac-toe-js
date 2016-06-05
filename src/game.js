@@ -5,10 +5,10 @@ var actions = require('./actions');
 var scoreView = require('./score-view');
 var gridView = require('./grid-view');
 var fiveiconView = require('./fiveicon-view');
-var Store = require('./store');
 var defineWinner = require('./middlewares/define-winner');
-var socket = io();
+var Store = require('./store');
 var store = new Store([defineWinner]);
+var socket = io();
 
 // Game
 // ----------------

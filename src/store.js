@@ -8,7 +8,10 @@ function Store(mid) {
 	this.state = {};
 
 	this.state = this.reduce(this.state, {});
-	this.dispatch = this._combineMiddlewares();
+
+	if (middlewares.length > 0) {
+		this.dispatch = this._combineMiddlewares();
+	}
 }
 
 Store.prototype.getState = function() {
@@ -19,7 +22,7 @@ Store.prototype.getPrevState = function() {
 	return this.prevState;
 };
 
-Store.prototype._dispatch = function(action) {
+Store.prototype.dispatch = function(action) {
 	this.prevState = this.state;
 	this.state = this.reduce(this.state, action);
 
@@ -30,11 +33,12 @@ Store.prototype._dispatch = function(action) {
 
 Store.prototype._combineMiddlewares = function() {
 	var self = this;
+	var dispatch = this.dispatch;
 
 	var middlewareAPI = {
 		getState: this.getState.bind(this),
 		dispatch: function() {
-			return self._dispatch.apply(self, arguments);
+			return dispatch.apply(self, arguments);
 		}
 	};
 
@@ -73,15 +77,22 @@ Store.prototype.notifySubscribers = function() {
 function updateGrid(grid, action) {
 	grid = grid || ['', '', '', '', '', '', '', '', ''];
 
-	return grid.map(function(c, i) {
-		var output = c;
+	switch (action.type) {
+		case 'SET_X':
+		case 'SET_O':
+		case 'RESTART_GAME':
+			return grid.map(function(c, i) {
+				var output = c;
 
-		if (action.index === i || action.type === 'RESTART_GAME') {
-			output = updateCell(c, action);
-		}
+				if (action.index === i || action.type === 'RESTART_GAME') {
+					output = updateCell(c, action);
+				}
 
-		return output;
-	});
+				return output;
+			});
+		default:
+			return grid;
+	}
 }
 
 function updateCell(cell, action) {
