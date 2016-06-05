@@ -65,17 +65,10 @@ TicTacToe.prototype.shouldPreventClick = function(state) {
 };
 
 TicTacToe.prototype.updateCell = function(state, index) {
-	var action = {
-		type: state.turn === 'x' ? 'SET_X' : 'SET_O',
-		index: parseInt(index, 10),
-		room: this.room
-	};
+	var action = actions.setCell(state.turn, index, this.room);
 
 	if (!state.player.length) {
-		store.dispatch({
-			type: 'PICK_SIDE',
-			side: state.turn
-		});
+		store.dispatch(actions.pickSide(state.turn));
 	}
 
 	store.dispatch(action);

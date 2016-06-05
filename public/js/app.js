@@ -536,17 +536,10 @@
 	};
 
 	TicTacToe.prototype.updateCell = function(state, index) {
-		var action = {
-			type: state.turn === 'x' ? 'SET_X' : 'SET_O',
-			index: parseInt(index, 10),
-			room: this.room
-		};
+		var action = actions.setCell(state.turn, index, this.room);
 
 		if (!state.player.length) {
-			store.dispatch({
-				type: 'PICK_SIDE',
-				side: state.turn
-			});
+			store.dispatch(actions.pickSide(state.turn));
 		}
 
 		store.dispatch(action);
@@ -671,11 +664,15 @@
 	document.addEventListener('DOMContentLoaded', function() {
 		var hash = window.location.hash;
 
+		// Generate room id
+		// ---------------
 		if (!hash || hash.length < 2) {
 			window.location.href = window.location.href + '#' +
 				(((1+Math.random())*0x10000)|0).toString(16).substring(1);
 		}
 
+		// Define variables
+		// ---------------
 		var game = __webpack_require__(7);
 		var utils = __webpack_require__(1);
 		var room = window.location.hash;
@@ -684,6 +681,8 @@
 		var popOver = utils.qs('#pop-over');
 		var storage = window.localStorage;
 
+		// Init game
+		// ---------------
 		game({
 			gridElement: '.js-table',
 			playersElement: '.js-players-display',
@@ -691,16 +690,19 @@
 		});
 
 		// Display room id
+		// ----------------
 		roomField.value = room.replace('#', '');
 
 		// Force refresh
+		// ---------------
 		refreshForm.addEventListener('submit', function(event) {
 			event.preventDefault();
 			window.location.hash = roomField.value;
 			document.location.reload(false);
 		}, false);
 
-		// Pop-over
+		// Pop-over logic
+		// ---------------
 		if (!storage.getItem('ttt-pop-over-shown')) {
 			popOver.style.display = 'block';
 
