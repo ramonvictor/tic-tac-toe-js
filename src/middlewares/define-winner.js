@@ -3,7 +3,7 @@ var winnerService = require('../winner-service');
 var actions = require('../actions');
 
 module.exports = function defineWinner(store) {
-	return function defineWinnerGetDispatch(next) {
+	return function(next) {
 		return function(action) {
 			var winnerSeq;
 			var prevState = store.getState();

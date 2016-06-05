@@ -1,5 +1,5 @@
 module.exports = function logger(store) {
-	return function loggerGetDispatch(next) {
+	return function(next) {
 		return function(action) {
 			console.groupCollapsed(action.type);
 					console.group('action:');

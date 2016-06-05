@@ -626,7 +626,7 @@
 	var actions = __webpack_require__(8);
 
 	module.exports = function defineWinner(store) {
-		return function defineWinnerGetDispatch(next) {
+		return function(next) {
 			return function(action) {
 				var winnerSeq;
 				var prevState = store.getState();
