@@ -16,8 +16,7 @@ module.exports = function defineWinner(store) {
 			var state = store.getState();
 
 			// Check winner
-			if (action.type !== 'SHOW_WINNER' &&
-				action.type !== 'RESTART_GAME') {
+			if (action.type !== 'SHOW_WINNER' && action.type !== 'RESTART_GAME') {
 				winnerSeq = winnerService.check(state.grid, lastTurn);
 
 				if (winnerSeq.length > 0) {

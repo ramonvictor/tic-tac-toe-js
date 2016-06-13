@@ -6,8 +6,9 @@ var scoreView = require('./score-view');
 var gridView = require('./grid-view');
 var fiveiconView = require('./fiveicon-view');
 var defineWinner = require('./middlewares/define-winner');
+var logger = require('./middlewares/logger');
 var Store = require('./store');
-var store = new Store([defineWinner]);
+var store = new Store([defineWinner/*, logger*/]);
 var socket = io();
 
 // Game

@@ -1,13 +1,11 @@
-var actions = {};
-
-actions.pickSide = function(turn) {
+exports.pickSide = function(turn) {
 	return {
 		type: 'PICK_SIDE',
 		side: turn
 	};
 };
 
-actions.setCell = function(turn, index, room) {
+exports.setCell = function(turn, index, room) {
 	return {
 		type: turn === 'x' ? 'SET_X' : 'SET_O',
 		index: parseInt(index, 10),
@@ -15,7 +13,7 @@ actions.setCell = function(turn, index, room) {
 	};
 };
 
-actions.showWinner = function(lastTurn, winnerSeq) {
+exports.showWinner = function(lastTurn, winnerSeq) {
 	return {
 		type: 'SHOW_WINNER',
 		winner: lastTurn,
@@ -23,10 +21,8 @@ actions.showWinner = function(lastTurn, winnerSeq) {
 	};
 };
 
-actions.restart = function() {
+exports.restart = function() {
 	return {
 		type: 'RESTART_GAME'
 	};
 };
-
-module.exports = actions;

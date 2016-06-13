@@ -100,14 +100,7 @@ gulp.task('webpack', function() {
     .pipe(webpackStream({
         output: {
             filename: 'app.js'
-        },
-        plugins: [
-            new webpack.DefinePlugin({
-                'process.env': {
-                    'NODE_ENV': (JSON.stringify(process.env.NODE_ENV) || '')
-                }
-            })
-        ]
+        }
     }))
     .pipe(gulp.dest(target.js_dest));
 });

@@ -37,8 +37,8 @@ Store.prototype._combineMiddlewares = function() {
 
 	var middlewareAPI = {
 		getState: this.getState.bind(this),
-		dispatch: function() {
-			return dispatch.apply(self, arguments);
+		dispatch: function(action) {
+			return dispatch.call(self, action);
 		}
 	};
 
@@ -48,9 +48,11 @@ Store.prototype._combineMiddlewares = function() {
 	});
 
 	// Init reduceRight with middlewareAPI.dispatch as initial value
-	return chain.reduceRight(function(composed, fn) {
+	dispatch = chain.reduceRight(function(composed, fn) {
 		return fn(composed);
-	}, middlewareAPI.dispatch);
+	}, dispatch.bind(this));
+
+	return dispatch;
 };
 
 Store.prototype.reduce = function(state, action) {

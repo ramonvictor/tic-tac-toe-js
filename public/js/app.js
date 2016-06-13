@@ -51,7 +51,7 @@
 	__webpack_require__(5);
 	__webpack_require__(6);
 	__webpack_require__(7);
-	module.exports = __webpack_require__(10);
+	module.exports = __webpack_require__(11);
 
 
 /***/ },
@@ -143,8 +143,8 @@
 
 		var middlewareAPI = {
 			getState: this.getState.bind(this),
-			dispatch: function() {
-				return dispatch.apply(self, arguments);
+			dispatch: function(action) {
+				return dispatch.call(self, action);
 			}
 		};
 
@@ -154,9 +154,11 @@
 		});
 
 		// Init reduceRight with middlewareAPI.dispatch as initial value
-		return chain.reduceRight(function(composed, fn) {
+		dispatch = chain.reduceRight(function(composed, fn) {
 			return fn(composed);
-		}, middlewareAPI.dispatch);
+		}, dispatch.bind(this));
+
+		return dispatch;
 	};
 
 	Store.prototype.reduce = function(state, action) {
@@ -477,8 +479,9 @@
 	var gridView = __webpack_require__(5);
 	var fiveiconView = __webpack_require__(6);
 	var defineWinner = __webpack_require__(9);
+	var logger = __webpack_require__(10);
 	var Store = __webpack_require__(2);
-	var store = new Store([defineWinner]);
+	var store = new Store([defineWinner/*, logger*/]);
 	var socket = io();
 
 	// Game
@@ -584,16 +587,14 @@
 /* 8 */
 /***/ function(module, exports) {
 
-	var actions = {};
-
-	actions.pickSide = function(turn) {
+	exports.pickSide = function(turn) {
 		return {
 			type: 'PICK_SIDE',
 			side: turn
 		};
 	};
 
-	actions.setCell = function(turn, index, room) {
+	exports.setCell = function(turn, index, room) {
 		return {
 			type: turn === 'x' ? 'SET_X' : 'SET_O',
 			index: parseInt(index, 10),
@@ -601,7 +602,7 @@
 		};
 	};
 
-	actions.showWinner = function(lastTurn, winnerSeq) {
+	exports.showWinner = function(lastTurn, winnerSeq) {
 		return {
 			type: 'SHOW_WINNER',
 			winner: lastTurn,
@@ -609,13 +610,11 @@
 		};
 	};
 
-	actions.restart = function() {
+	exports.restart = function() {
 		return {
 			type: 'RESTART_GAME'
 		};
 	};
-
-	module.exports = actions;
 
 /***/ },
 /* 9 */
@@ -639,8 +638,7 @@
 				var state = store.getState();
 
 				// Check winner
-				if (action.type !== 'SHOW_WINNER' &&
-					action.type !== 'RESTART_GAME') {
+				if (action.type !== 'SHOW_WINNER' && action.type !== 'RESTART_GAME') {
 					winnerSeq = winnerService.check(state.grid, lastTurn);
 
 					if (winnerSeq.length > 0) {
@@ -659,6 +657,30 @@
 
 /***/ },
 /* 10 */
+/***/ function(module, exports) {
+
+	module.exports = function logger(store) {
+		return function(next) {
+			return function(action) {
+				console.groupCollapsed(action.type);
+						console.group('action:');
+							console.log(JSON.stringify(action, '', '\t'));
+						console.groupEnd();
+						console.groupCollapsed('previous state:');
+							console.log(JSON.stringify(store.getState(), '', '\t'));
+						console.groupEnd();
+						var result = next(action);
+						console.groupCollapsed('state:');
+							console.log(JSON.stringify(store.getState(), '', '\t'));
+						console.groupEnd();
+				console.groupEnd();
+				return result;
+			};
+		};
+	};
+
+/***/ },
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	document.addEventListener('DOMContentLoaded', function() {
