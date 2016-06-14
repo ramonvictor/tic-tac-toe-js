@@ -14,6 +14,10 @@ utils.wait = function(ms, cb) {
 	return window.setTimeout(cb, (ms || 500));
 };
 
+utils.isDevMode = function() {
+	return window && window.location.hostname === 'localhost';
+};
+
 if (typeof Object.assign != 'function') {
 	(function () {
 		Object.assign = function (target) {

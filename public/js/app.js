@@ -74,6 +74,10 @@
 		return window.setTimeout(cb, (ms || 500));
 	};
 
+	utils.isDevMode = function() {
+		return window && window.location.hostname === 'localhost';
+	};
+
 	if (typeof Object.assign != 'function') {
 		(function () {
 			Object.assign = function (target) {
@@ -481,7 +485,7 @@
 	var defineWinner = __webpack_require__(9);
 	var logger = __webpack_require__(10);
 	var Store = __webpack_require__(2);
-	var store = new Store([defineWinner/*, logger*/]);
+	var store = new Store([defineWinner, logger]);
 	var socket = io();
 
 	// Game
@@ -657,11 +661,17 @@
 
 /***/ },
 /* 10 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
+
+	var utils = __webpack_require__(1);
 
 	module.exports = function logger(store) {
 		return function(next) {
 			return function(action) {
+				if (!utils.isDevMode()) {
+					return next(action);
+				}
+
 				console.groupCollapsed(action.type);
 						console.group('action:');
 							console.log(JSON.stringify(action, '', '\t'));

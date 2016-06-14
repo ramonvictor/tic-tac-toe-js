@@ -8,7 +8,7 @@ var fiveiconView = require('./fiveicon-view');
 var defineWinner = require('./middlewares/define-winner');
 var logger = require('./middlewares/logger');
 var Store = require('./store');
-var store = new Store([defineWinner/*, logger*/]);
+var store = new Store([defineWinner, logger]);
 var socket = io();
 
 // Game

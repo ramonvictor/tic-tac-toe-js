@@ -1,6 +1,12 @@
+var utils = require('../utils');
+
 module.exports = function logger(store) {
 	return function(next) {
 		return function(action) {
+			if (!utils.isDevMode()) {
+				return next(action);
+			}
+
 			console.groupCollapsed(action.type);
 					console.group('action:');
 						console.log(JSON.stringify(action, '', '\t'));
